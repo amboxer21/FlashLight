@@ -45,7 +45,6 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
     }
     else {
       getCamera();
-      Toast.makeText(this, "Opened Camera.", Toast.LENGTH_LONG).show();
     }
 
     isFlashOn = false;
@@ -70,12 +69,10 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
       if(!(isFlashOn)) {
         flashLightOn();
         flashLight.setText("OFF");
-        Toast.makeText(this, "flashLightOn()", Toast.LENGTH_LONG).show();
       }
       else {
         flashLightOff();
         flashLight.setText("ON");
-        Toast.makeText(this, "flashLightOff()", Toast.LENGTH_LONG).show();
       }
     }
     catch(Exception e) {
@@ -105,7 +102,6 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
       mCam.setParameters(params);
       mCam.startPreview();
       isFlashOn = true;
-      Toast.makeText(this, "isFlashOn = true", Toast.LENGTH_LONG).show();
     }
   }
 
@@ -118,7 +114,6 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
         mCam.stopPreview();
         mCam.release();
         isFlashOn = false;
-        Toast.makeText(this, "isFlashOn = false", Toast.LENGTH_LONG).show();
       }
     }
     catch(Exception e) {
@@ -127,13 +122,12 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   }
 
   public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-    Log.d(TAG,"surfaceChanged()");
+    // Empty line
   }
 
   public void surfaceCreated(SurfaceHolder holder) {
     try {
       mCam.setPreviewDisplay(holder); 
-      Toast.makeText(this, "Setting preview.", Toast.LENGTH_LONG).show();
     }
     catch(Exception e) {
       e.printStackTrace();
@@ -141,7 +135,6 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   }
 
   public void surfaceDestroyed(SurfaceHolder holder) {
-    Toast.makeText(this, "Preview stopped.", Toast.LENGTH_LONG).show();
     mCam.stopPreview();
   } 
 
