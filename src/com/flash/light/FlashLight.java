@@ -8,6 +8,8 @@ import android.widget.Toast;
 import android.widget.Button;
 import android.content.Context;
 import android.hardware.Camera;
+import android.view.SurfaceView;
+import android.view.SurfaceHolder;
 import android.view.View.OnClickListener;
 import android.content.pm.PackageManager;
 import android.hardware.Camera.Parameters;
@@ -18,6 +20,9 @@ public class FlashLight extends Activity {
   private boolean isFlashOn;
   private Parameters params;
   private Button flashLight;
+  private boolean hasCameraFlash;
+  private SurfaceView surfaceView;
+  private SurfaceHolder surfaceHolder;
 
   private static final String TAG = FlashLight.class.getSimpleName();
 
@@ -26,7 +31,7 @@ public class FlashLight extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
-    boolean hasCameraFlash = getApplicationContext().getPackageManager()
+    hasCameraFlash = getApplicationContext().getPackageManager()
       .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
     if(!(hasCameraFlash)) {
@@ -59,10 +64,12 @@ public class FlashLight extends Activity {
     try {
       if(!(isFlashOn)) {
         flashLightOn();
+        flashLight.setText("OFF");
         Toast.makeText(this, "flashLightOn()", Toast.LENGTH_LONG).show();
       }
       else {
         flashLightOff();
+        flashLight.setText("ON");
         Toast.makeText(this, "flashLightOff()", Toast.LENGTH_LONG).show();
       }
     }
@@ -74,7 +81,7 @@ public class FlashLight extends Activity {
   public void getCamera() {
       try {
         mCam = Camera.open();
-        //params = mCam.getParameters();
+        params = mCam.getParameters();
       }
       catch(Exception e) {
         e.printStackTrace();
@@ -105,7 +112,6 @@ public class FlashLight extends Activity {
         mCam.setParameters(params);
         mCam.stopPreview();
         mCam.release();
-        //mCam = null;
         isFlashOn = false;
         Toast.makeText(this, "isFlashOn = false", Toast.LENGTH_LONG).show();
       }

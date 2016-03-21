@@ -14,6 +14,6 @@
   android:layout_height="wrap_content"
   android:layout_alignParentBottom="true"
   android:layout_centerHorizontal="true"
-  android:text="Off"
+  android:text="ON"
   android:id="@+id/flashLight"/>
 </RelativeLayout>
