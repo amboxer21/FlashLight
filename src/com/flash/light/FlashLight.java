@@ -14,7 +14,7 @@ import android.view.View.OnClickListener;
 import android.content.pm.PackageManager;
 import android.hardware.Camera.Parameters;
 
-public class FlashLight extends Activity {
+public class FlashLight extends Activity implements SurfaceHolder.Callback {
 
   private Camera mCam;
   private boolean isFlashOn;
@@ -30,6 +30,11 @@ public class FlashLight extends Activity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
+
+    surfaceView = (SurfaceView)findViewById(R.id.preview);
+    surfaceHolder = surfaceView.getHolder();
+    surfaceHolder.addCallback(this);
+    surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
     hasCameraFlash = getApplicationContext().getPackageManager()
       .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
@@ -120,5 +125,24 @@ public class FlashLight extends Activity {
       e.printStackTrace();
     }
   }
+
+  public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    Log.d(TAG,"surfaceChanged()");
+  }
+
+  public void surfaceCreated(SurfaceHolder holder) {
+    try {
+      mCam.setPreviewDisplay(holder); 
+      Toast.makeText(this, "Setting preview.", Toast.LENGTH_LONG).show();
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void surfaceDestroyed(SurfaceHolder holder) {
+    Toast.makeText(this, "Preview stopped.", Toast.LENGTH_LONG).show();
+    mCam.stopPreview();
+  } 
 
 }

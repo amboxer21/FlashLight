@@ -3,11 +3,16 @@
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
-
+  
 <TextView
-  android:layout_width="fill_parent"
+  android:layout_width="wrap_content"
   android:layout_height="wrap_content"
   android:text="FlashLight"/>
+
+<SurfaceView
+  android:id="@+id/preview"
+  android:layout_width="1dp"
+  android:layout_height="1dp"/>
 
 <Button
   android:layout_width="wrap_content"
@@ -16,4 +21,5 @@
   android:layout_centerHorizontal="true"
   android:text="ON"
   android:id="@+id/flashLight"/>
+
 </RelativeLayout>
