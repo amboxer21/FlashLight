@@ -6,10 +6,12 @@ import android.view.View;
 import android.app.Activity;
 import android.widget.Toast;
 import android.widget.Button;
+import android.graphics.Color;
 import android.content.Context;
 import android.hardware.Camera;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
+import android.widget.ImageButton;
 import android.view.View.OnClickListener;
 import android.content.pm.PackageManager;
 import android.hardware.Camera.Parameters;
@@ -19,7 +21,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   private Camera mCam;
   private boolean isFlashOn;
   private Parameters params;
-  private Button flashLight;
+  private ImageButton flashLight;
   private boolean hasCameraFlash;
   private SurfaceView surfaceView;
   private SurfaceHolder surfaceHolder;
@@ -80,13 +82,16 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
     }
 
     isFlashOn = false;
-    flashLight = (Button)findViewById(R.id.flashLight);
+    flashLight = (ImageButton)findViewById(R.id.flashLight);
     flashLight.setOnClickListener(new OnClickListener() {
 
       @Override
       public void onClick(View view) {
         try {
           toggle();
+          if(isFlashOn) {
+            flashLight.setBackgroundResource(R.drawable.ic_launcher);
+          }
         }
         catch(Exception e) {
           e.printStackTrace();
@@ -100,11 +105,9 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
     try {
       if(!(isFlashOn)) {
         flashLightOn();
-        flashLight.setText("OFF");
       }
       else {
         flashLightOff();
-        flashLight.setText("ON");
       }
     }
     catch(Exception e) {
