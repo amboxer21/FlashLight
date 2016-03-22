@@ -26,30 +26,37 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
 
   private static final String TAG = FlashLight.class.getSimpleName();
 
-  @Override
+  /*@Override
   public void onStart() {
     super.onStart();
-  }
+  }*/
 
   @Override
   public void onStop() {
     super.onStop();
+    mCam.stopPreview();
+    mCam.release();
   }
 
   @Override
   public void onPause() {
     super.onPause();
+    mCam.stopPreview();
   }
 
   @Override
   public void onResume() {
     super.onResume();
+    getCamera();
+    if(isFlashOn) {
+      flashLightOn();
+    }
   }
 
-  @Override
+  /*@Override
   public void onDestroy() {
     super.onDestroy();
-  }
+  }*/
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -120,13 +127,14 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
       Toast.makeText(this, "Camera not found.", Toast.LENGTH_LONG).show();
       return;
     }
-
-    if(!(isFlashOn)) {
-      params = mCam.getParameters();
-      params.setFlashMode(Parameters.FLASH_MODE_TORCH);
-      mCam.setParameters(params);
-      mCam.startPreview();
-      isFlashOn = true;
+    try {
+      if(!(isFlashOn)) {
+        params = mCam.getParameters();
+        params.setFlashMode(Parameters.FLASH_MODE_TORCH);
+        mCam.setParameters(params);
+        mCam.startPreview();
+        isFlashOn = true;
+      }
     }
   }
 
@@ -137,7 +145,6 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
         params.setFlashMode(Parameters.FLASH_MODE_OFF);
         mCam.setParameters(params);
         mCam.stopPreview();
-        mCam.release();
         isFlashOn = false;
       }
     }
@@ -146,7 +153,9 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
     }
   }
 
-  public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
+  public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { 
+    // Empty method
+  }
 
   public void surfaceCreated(SurfaceHolder holder) {
     try {
