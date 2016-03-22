@@ -27,6 +27,31 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   private static final String TAG = FlashLight.class.getSimpleName();
 
   @Override
+  public void onStart() {
+    super.onStart();
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+  }
+
+  @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
@@ -121,9 +146,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
     }
   }
 
-  public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-    // Empty line
-  }
+  public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
 
   public void surfaceCreated(SurfaceHolder holder) {
     try {
