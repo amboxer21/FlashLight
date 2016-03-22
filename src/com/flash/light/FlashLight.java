@@ -65,7 +65,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
 
     surfaceView = (SurfaceView)findViewById(R.id.preview);
     surfaceHolder = surfaceView.getHolder();
-    surfaceHolder.addCallback(this);
+    surfaceHolder.addCallback(FlashLight.this);
     surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
     hasCameraFlash = getApplicationContext().getPackageManager()
@@ -135,6 +135,9 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
         mCam.startPreview();
         isFlashOn = true;
       }
+    }
+    catch(Exception e) {
+      e.printStackTrace();
     }
   }
 
