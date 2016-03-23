@@ -90,7 +90,10 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
         try {
           toggle();
           if(isFlashOn) {
-            flashLight.setBackgroundResource(R.drawable.ic_launcher);
+            flashLight.setBackgroundResource(R.drawable.flash_light_on);
+          }
+          else {
+            flashLight.setBackgroundResource(R.drawable.flash_light_off);
           }
         }
         catch(Exception e) {

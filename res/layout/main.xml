@@ -17,7 +17,7 @@
 <ImageButton
   android:id="@+id/flashLight"
   android:background="@null"
-  android:src="@drawable/flashlight"
+  android:src="@drawable/flash_light_off"
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
   android:layout_alignParentBottom="true"
