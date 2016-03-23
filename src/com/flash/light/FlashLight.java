@@ -37,29 +37,26 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   public void onStop() {
     super.onStop();
     mCam.stopPreview();
-    mCam.release();
   }
 
   @Override
   public void onPause() {
     super.onPause();
     mCam.stopPreview();
-    mCam.release();
   }
 
   @Override
   public void onResume() {
     super.onResume();
     getCamera();
-    if(isFlashOn) {
-      flashLightOn();
-    }
   }
 
-  /*@Override
+  @Override
   public void onDestroy() {
     super.onDestroy();
-  }*/
+    mCam.stopPreview();
+    mCam.release();
+  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
