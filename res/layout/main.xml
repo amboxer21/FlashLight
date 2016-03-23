@@ -6,8 +6,7 @@
   
 <TextView
   android:layout_width="wrap_content"
-  android:layout_height="wrap_content"
-  android:text="FlashLight"/>
+  android:layout_height="wrap_content"/>
 
 <SurfaceView
   android:id="@+id/preview"
