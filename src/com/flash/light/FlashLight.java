@@ -44,6 +44,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   public void onPause() {
     super.onPause();
     mCam.stopPreview();
+    mCam.release();
   }
 
   @Override
