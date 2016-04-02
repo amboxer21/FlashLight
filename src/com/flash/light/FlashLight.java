@@ -11,7 +11,7 @@ import android.content.Context;
 import android.hardware.Camera;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
-import android.widget.ToggleButton;
+import android.widget.ImageButton;
 import android.view.View.OnClickListener;
 import android.content.pm.PackageManager;
 import android.hardware.Camera.Parameters;
@@ -21,7 +21,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   private Camera mCam;
   private boolean isFlashOn;
   private Parameters params;
-  private ToggleButton flashLight;
+  private ImageButton flashLight;
   private boolean hasCameraFlash;
   private SurfaceView surfaceView;
   private SurfaceHolder surfaceHolder;
@@ -63,7 +63,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
     }
 
     isFlashOn = false;
-    flashLight = (ToggleButton)findViewById(R.id.flashLight);
+    flashLight = (ImageButton)findViewById(R.id.flashLight);
     flashLight.setOnClickListener(new OnClickListener() {
 
       @Override
@@ -71,10 +71,10 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
         try {
           toggle();
           if(isFlashOn) {
-            //flashLight.setBackgroundResource(R.drawable.flash_light_on);
+            flashLight.setBackgroundResource(R.drawable.power_button_on);
           }
           else {
-            //flashLight.setBackgroundResource(R.drawable.flash_light_off);
+            flashLight.setBackgroundResource(R.drawable.power_button_off);
           }
         }
         catch(Exception e) {
@@ -157,8 +157,8 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   }
 
   public void surfaceDestroyed(SurfaceHolder holder) {
-    mCam.stopPreview();
-    mCam.release();
+    //mCam.stopPreview();
+    //mCam.release();
   } 
 
 }

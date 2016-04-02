@@ -13,10 +13,10 @@
     android:layout_width="1dp"
     android:layout_height="1dp"/>
 
-  <ToggleButton
+  <ImageButton
     android:background="@null"
     android:id="@+id/flashLight"
-    android:button="@drawable/check"
+    android:src="@drawable/power_button_off"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
