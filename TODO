@@ -1,3 +1,5 @@
 TODO
 
 1) Add persistance to the torch. For example, have it run even when the app is not in the foreground.
+
+2) Add preferences menu

@@ -1,0 +1,5 @@
+Aguevara
+Sunday April 3, 2016 - 10:11pm
+Changed ButtonImage to a ToggleImage. 
+Fixed FC's while running in background.
+Running torch as a service to allow it to run in the bckground.
