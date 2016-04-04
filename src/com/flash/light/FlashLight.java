@@ -18,36 +18,13 @@ import android.hardware.Camera.Parameters;
 public class FlashLight extends Activity implements SurfaceHolder.Callback {
 
   private Camera mCam;
-  private boolean isFlashOn;
   private Parameters params;
   private ToggleButton flashLight;
-  private boolean hasCameraFlash;
   private SurfaceView surfaceView;
   private SurfaceHolder surfaceHolder;
 
-  private static final String TAG = FlashLight.class.getSimpleName();
-
-  @Override
-  public void onStart() {
-    super.onStart();
-    try {
-      getCamera();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    try {
-      getCamera();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
-  }
+  private boolean isFlashOn;
+  private boolean hasCameraFlash;
 
   @Override
   public void onDestroy() {
@@ -77,7 +54,6 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
       getCamera();
     }
 
-    isFlashOn = false;
     flashLight = (ToggleButton)findViewById(R.id.flashLight);
     flashLight.setOnClickListener(new OnClickListener() {
 
@@ -108,6 +84,18 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   }
 
   public void getCamera() {
+    try {
+      if(mCam == null) {
+        mCam = Camera.open();
+        params = mCam.getParameters();
+      }
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void initCamera() {
       try {
         if(mCam == null) {
           mCam = Camera.open();
@@ -129,7 +117,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   public void surfaceCreated(SurfaceHolder holder) {
     try {
       mCam.setPreviewDisplay(holder);
-      getCamera(); 
+      getCamera();
     }
     catch(Exception e) {
       e.printStackTrace();
