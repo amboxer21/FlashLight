@@ -3,14 +3,17 @@ package com.flash.light;
 import android.os.IBinder;
 import android.app.Service;
 import android.content.Intent;
+import android.content.Context;
 
 public class TorchService extends Service {
 
-  @Override
-  public void onCreate() {
-    super.onCreate();
+  public void onCreate(Context context, Intent intent) {
     try {
-      FlashLight flashLight = new FlashLight();
+      if (intent.getAction() != null) {
+        intent = new Intent(context, FlashLight.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+      }
     }
     catch(Exception e) {
       e.printStackTrace();

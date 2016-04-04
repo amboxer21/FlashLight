@@ -11,7 +11,7 @@ import android.content.Context;
 import android.hardware.Camera;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
-import android.widget.ImageButton;
+import android.widget.ToggleButton;
 import android.view.View.OnClickListener;
 import android.content.pm.PackageManager;
 import android.hardware.Camera.Parameters;
@@ -21,7 +21,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   private Camera mCam;
   private boolean isFlashOn;
   private Parameters params;
-  private ImageButton flashLight;
+  private ToggleButton flashLight;
   private boolean hasCameraFlash;
   private SurfaceView surfaceView;
   private SurfaceHolder surfaceHolder;
@@ -29,9 +29,25 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   private static final String TAG = FlashLight.class.getSimpleName();
 
   @Override
+  public void onStart() {
+    super.onStart();
+    try {
+      getCamera();
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
   public void onResume() {
     super.onResume();
-    getCamera();
+    try {
+      getCamera();
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -40,6 +56,16 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
     mCam.stopPreview();
     mCam.release();
   }
+
+  // CausesFC due to onDestroy being called after onBackPressed. 
+  // onDestroy is the last stop and we cannot call release on a camera 
+  // that has already been released. Will fix later.
+  /*@Override
+  public void onBackPressed() {
+    super.onBackPressed();
+    mCam.stopPreview(); 
+    mCam.release();
+  }*/
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -63,19 +89,13 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
     }
 
     isFlashOn = false;
-    flashLight = (ImageButton)findViewById(R.id.flashLight);
+    flashLight = (ToggleButton)findViewById(R.id.flashLight);
     flashLight.setOnClickListener(new OnClickListener() {
 
       @Override
       public void onClick(View view) {
         try {
           toggle();
-          if(isFlashOn) {
-            flashLight.setBackgroundResource(R.drawable.power_button_on);
-          }
-          else {
-            flashLight.setBackgroundResource(R.drawable.power_button_off);
-          }
         }
         catch(Exception e) {
           e.printStackTrace();
@@ -89,9 +109,11 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
     try {
       if(!(isFlashOn)) {
         flashLightOn();
+        //flashLight.setBackgroundResource(R.drawable.power_button_on);
       }
       else {
         flashLightOff();
+        //flashLight.setBackgroundResource(R.drawable.power_button_off);
       }
     }
     catch(Exception e) {
@@ -101,8 +123,13 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
 
   public void getCamera() {
       try {
-        mCam = Camera.open();
-        params = mCam.getParameters();
+        if(mCam == null) {
+          mCam = Camera.open();
+          params = mCam.getParameters();
+        }
+        if(!(mCam == null)) {
+          mCam.reconnect();
+        }
       }
       catch(Exception e) {
         e.printStackTrace();
@@ -115,13 +142,12 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
       return;
     }
     try {
-      if(!(isFlashOn)) {
-        params = mCam.getParameters();
-        params.setFlashMode(Parameters.FLASH_MODE_TORCH);
-        mCam.setParameters(params);
-        mCam.startPreview();
-        isFlashOn = true;
-      }
+      params = mCam.getParameters();
+      params.setFlashMode(Parameters.FLASH_MODE_TORCH);
+      mCam.setParameters(params);
+      mCam.startPreview();
+      isFlashOn = true;
+      //Toast.makeText(this, "ON", Toast.LENGTH_LONG).show();
     }
     catch(Exception e) {
       e.printStackTrace();
@@ -130,13 +156,12 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
 
   public void flashLightOff() {
     try {
-      if(isFlashOn) {
-        params = mCam.getParameters();
-        params.setFlashMode(Parameters.FLASH_MODE_OFF);
-        mCam.setParameters(params);
-        mCam.stopPreview();
-        isFlashOn = false;
-      }
+      params = mCam.getParameters();
+      params.setFlashMode(Parameters.FLASH_MODE_OFF);
+      mCam.setParameters(params);
+      mCam.stopPreview();
+      isFlashOn = false;
+      //Toast.makeText(this, "OFF", Toast.LENGTH_LONG).show();
     }
     catch(Exception e) {
       e.printStackTrace();
@@ -149,7 +174,8 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
 
   public void surfaceCreated(SurfaceHolder holder) {
     try {
-      mCam.setPreviewDisplay(holder); 
+      mCam.setPreviewDisplay(holder);
+      getCamera(); 
     }
     catch(Exception e) {
       e.printStackTrace();
@@ -157,6 +183,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   }
 
   public void surfaceDestroyed(SurfaceHolder holder) {
+    // Not needed since we are using a service to run the main activity.
     //mCam.stopPreview();
     //mCam.release();
   } 
