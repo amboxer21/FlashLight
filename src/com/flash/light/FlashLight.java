@@ -24,8 +24,13 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   private SurfaceView surfaceView;
   private SurfaceHolder surfaceHolder;
 
+<<<<<<< HEAD
   private boolean hasCameraFlash;
   private boolean isFlashOn = false;
+=======
+  private boolean isFlashOn;
+  private boolean hasCameraFlash;
+>>>>>>> 7002b16ffee677546305596cd0fae8c9b4de66b2
 
   @Override
   public void onDestroy() {
@@ -84,6 +89,18 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   }
 
   public void getCamera() {
+    try {
+      if(mCam == null) {
+        mCam = Camera.open();
+        params = mCam.getParameters();
+      }
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void initCamera() {
       try {
         if(mCam == null) {
           mCam = Camera.open();
@@ -105,6 +122,10 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   public void surfaceCreated(SurfaceHolder holder) {
     try {
       mCam.setPreviewDisplay(holder);
+<<<<<<< HEAD
+=======
+      getCamera();
+>>>>>>> 7002b16ffee677546305596cd0fae8c9b4de66b2
     }
     catch(Exception e) {
       e.printStackTrace();
