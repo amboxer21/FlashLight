@@ -35,9 +35,42 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   }
 
   @Override
+  public void onStop() {
+    super.onPause();
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    Toast.makeText(getApplicationContext(), "" + isFlashOn, Toast.LENGTH_LONG).show();
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle savedInstanceState) {
+    savedInstanceState.putBoolean("isFlashOn", isFlashOn);
+    super.onSaveInstanceState(savedInstanceState);
+  }
+
+  @Override
+  public void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    isFlashOn = savedInstanceState.getBoolean("isFlashOn");
+  }
+
+  @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
+
+    if(savedInstanceState != null) {
+      isFlashOn = savedInstanceState.getBoolean("isFlashOn");
+      Toast.makeText(getApplicationContext(), "1:" + isFlashOn, Toast.LENGTH_LONG).show();
+    }
 
     surfaceView = (SurfaceView)findViewById(R.id.preview);
     surfaceHolder = surfaceView.getHolder();
@@ -73,6 +106,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
             params.setFlashMode(Parameters.FLASH_MODE_OFF);
             mCam.setParameters(params);
             mCam.stopPreview();
+            mCam.release();
             isFlashOn = false;
           }
         }
