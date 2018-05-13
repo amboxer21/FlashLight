@@ -14,13 +14,12 @@
     android:layout_height="1dp"/>
 
   <ToggleButton
-    android:gravity="center"
     android:textOn=""
     android:textOff=""
     android:id="@+id/flashLight"
     android:background="@drawable/check"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="130dp"
+    android:layout_height="80dp"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"/>
 

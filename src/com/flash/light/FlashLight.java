@@ -1,5 +1,6 @@
 package com.flash.light;
 
+import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
 import android.app.Activity;
@@ -47,7 +48,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   @Override
   public void onResume() {
     super.onResume();
-    Toast.makeText(getApplicationContext(), "" + isFlashOn, Toast.LENGTH_LONG).show();
+    //Toast.makeText(getApplicationContext(), "" + isFlashOn, Toast.LENGTH_LONG).show();
   }
 
   @Override
@@ -69,7 +70,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
 
     if(savedInstanceState != null) {
       isFlashOn = savedInstanceState.getBoolean("isFlashOn");
-      Toast.makeText(getApplicationContext(), "1:" + isFlashOn, Toast.LENGTH_LONG).show();
+      //Toast.makeText(getApplicationContext(), "1:" + isFlashOn, Toast.LENGTH_LONG).show();
     }
 
     surfaceView = (SurfaceView)findViewById(R.id.preview);
@@ -106,11 +107,12 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
             params.setFlashMode(Parameters.FLASH_MODE_OFF);
             mCam.setParameters(params);
             mCam.stopPreview();
-            mCam.release();
             isFlashOn = false;
           }
         }
         catch(Exception e) {
+          mCam.release();
+	  Log.e("FlashLight","onClick Exception e: " + e.toString());
           e.printStackTrace();
         }
       }
