@@ -34,6 +34,9 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
   private boolean hasCameraFlash;
   private boolean isFlashOn = false;
 
+  private static ComponentName componentName;
+  private static PackageManager packageManager;
+
   @Override
   public void onDestroy() {
     super.onDestroy();
@@ -69,10 +72,17 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
     isFlashOn = savedInstanceState.getBoolean("isFlashOn");
   }
 
+  public void showAppIcon(Context context) {
+    packageManager = getPackageManager();
+    componentName  = new ComponentName(this, com.flash.light.FlashLight.class);
+    packageManager.setComponentEnabledSetting(componentName,
+      PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+  }
+
   public void hideAppIcon(Context context) {
-    PackageManager p = context.getPackageManager();
-    ComponentName componentName = new ComponentName(this, com.flash.light.FlashLight.class); 
-    p.setComponentEnabledSetting(componentName,
+    packageManager = getPackageManager();
+    componentName  = new ComponentName(this, com.flash.light.FlashLight.class); 
+    packageManager.setComponentEnabledSetting(componentName,
       PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
   }
 
