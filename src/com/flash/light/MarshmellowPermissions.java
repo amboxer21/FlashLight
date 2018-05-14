@@ -1,4 +1,4 @@
-package com.justdrive.app;
+package com.flash.light;
 
 import android.Manifest;
 import android.app.Activity;

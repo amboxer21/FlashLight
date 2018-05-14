@@ -1,4 +1,4 @@
-package com.justdrive.app;
+package com.flash.light;
 
 import android.app.Activity;
 import android.app.AlertDialog;

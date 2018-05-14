@@ -1,4 +1,4 @@
-package com.justdrive.app;
+package com.flash.light;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -12,17 +12,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
  
-  private static final int DATABASE_VERSION      = 1;
+  private static final int DATABASE_VERSION = 1;
  
-  private static final String KEY_ID             = "id";
-  private static final String KEY_EMAIL          = "email";
-  private static final String KEY_APP_PASSWORD   = "app_password";
-  private static final String KEY_PH_NO          = "phone_number";
-  private static final String KEY_U_PH_NO        = "user_phone_number";
-  private static final String KEY_TN_PH_NO       = "teen_phone_number";
+  private static final String KEY_ID        = "id";
+  private static final String KEY_HIDE      = "hide";
 
-  private static final String TABLE_CONTACTS     = "contacts";
-  private static final String DATABASE_NAME      = "contactsManager";
+  private static final String TABLE_OPTIONS = "options";
+  private static final String DATABASE_NAME = "FlashLight";
  
   public DatabaseHandler(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -30,103 +26,83 @@ public class DatabaseHandler extends SQLiteOpenHelper {
  
   @Override
   public void onCreate(SQLiteDatabase db) {
-    String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "("
+    String CREATE_OPTIONS_TABLE = "CREATE TABLE " + TABLE_OPTIONS + "("
       + KEY_ID + " INTEGER PRIMARY KEY," 
-      + KEY_EMAIL + " TEXT,"
-      + KEY_PH_NO + " TEXT," 
-      + KEY_TN_PH_NO + " TEXT," 
-      + KEY_APP_PASSWORD + " TEXT,"
-      + KEY_U_PH_NO + " TEXT" + ")";
-    db.execSQL(CREATE_CONTACTS_TABLE);
+      + KEY_HIDE + " TEXT" + ")";
+    db.execSQL(CREATE_OPTIONS_TABLE);
   }
  
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
+    db.execSQL("DROP TABLE IF EXISTS " + TABLE_OPTIONS);
     onCreate(db);
   }
 
-  void addContact(Contact contact) {
+  void addFlashLightDatabase(FlashLightDatabase flashLightDatabase) {
     SQLiteDatabase db = this.getWritableDatabase();
  
     ContentValues values = new ContentValues();
-    values.put(KEY_EMAIL, contact.getEmail()); 
-    values.put(KEY_PH_NO, contact.getPhoneNumber()); 
-    values.put(KEY_TN_PH_NO, contact.getTeenPhoneNumber()); 
-    values.put(KEY_APP_PASSWORD, contact.getAppPassword()); 
-    values.put(KEY_U_PH_NO, contact.getMPhoneNumber()); 
+    values.put(KEY_HIDE, flashLightDatabase.getHide()); 
  
-    db.insert(TABLE_CONTACTS, null, values);
+    db.insert(TABLE_OPTIONS, null, values);
     db.close(); 
   }
  
-  Contact getContact(int id) {
+  FlashLightDatabase getFlashLightDatabase(int id) {
     SQLiteDatabase db = this.getReadableDatabase();
  
-    Cursor cursor = db.query(TABLE_CONTACTS, 
-      new String[] { KEY_ID, KEY_EMAIL, KEY_PH_NO, KEY_TN_PH_NO, KEY_APP_PASSWORD, KEY_U_PH_NO }, KEY_ID + "=?",
+    Cursor cursor = db.query(TABLE_OPTIONS, 
+      new String[] { KEY_ID, KEY_HIDE }, KEY_ID + "=?",
       new String[] { String.valueOf(id) }, null, null, null, null);
       if (cursor != null) {
         cursor.moveToFirst();
       }
  
-      Contact contact = new Contact(Integer.parseInt(cursor.getString(0)),
-        cursor.getString(1), 
-        cursor.getString(2), 
-        cursor.getString(3), 
-        cursor.getString(4),
-        cursor.getString(5));
+      FlashLightDatabase flashLightDatabase = new FlashLightDatabase(Integer.parseInt(cursor.getString(0)),
+        cursor.getString(1));
 
-      return contact;
+      return flashLightDatabase;
   }
      
-  public List<Contact> getAllContacts() {
+  public List<FlashLightDatabase> getAllFlashLightDatabase() {
 
-    List<Contact> contactList = new ArrayList<Contact>();
+    List<FlashLightDatabase> flashLightDatabaseList = new ArrayList<FlashLightDatabase>();
 
-    String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS;
+    String selectQuery = "SELECT  * FROM " + TABLE_OPTIONS;
  
     SQLiteDatabase db  = this.getWritableDatabase();
     Cursor cursor      = db.rawQuery(selectQuery, null);
  
     if (cursor.moveToFirst()) {
       do {
-        Contact contact = new Contact();
-        contact.setID(Integer.parseInt(cursor.getString(0)));
-        contact.setEmail(cursor.getString(1));
-        contact.setPhoneNumber(cursor.getString(2));
-        contact.setTeenPhoneNumber(cursor.getString(3));
-        contact.setAppPassword(cursor.getString(4));
-        contact.setMPhoneNumber(cursor.getString(5));
-        contactList.add(contact);
+        FlashLightDatabase flashLightDatabase = new FlashLightDatabase();
+        flashLightDatabase.setID(Integer.parseInt(cursor.getString(0)));
+        flashLightDatabase.setHide(cursor.getString(1));
+        flashLightDatabaseList.add(flashLightDatabase);
       } while (cursor.moveToNext());
     }
  
-    return contactList;
+    return flashLightDatabaseList;
   }
  
-  public int updateContact(Contact contact) {
+  public int updateFlashLightDatabase(FlashLightDatabase flashLightDatabase) {
     SQLiteDatabase db    = this.getWritableDatabase();
     ContentValues values = new ContentValues();
-    values.put(KEY_EMAIL, contact.getEmail());
-    values.put(KEY_PH_NO, contact.getPhoneNumber());
-    values.put(KEY_TN_PH_NO, contact.getTeenPhoneNumber());
-    values.put(KEY_APP_PASSWORD, contact.getAppPassword());
-    values.put(KEY_U_PH_NO, contact.getMPhoneNumber());
+    values.put(KEY_HIDE, flashLightDatabase.getHide());
  
-    return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",
-      new String[] { String.valueOf(contact.getID()) });
+    return db.update(TABLE_OPTIONS, values, KEY_ID + " = ?",
+      new String[] { String.valueOf(flashLightDatabase.getID()) });
   }
  
-  public void deleteContact(Contact contact) {
+  public void deleteFlashLightDatabase(FlashLightDatabase flashLightDatabase) {
     SQLiteDatabase db = this.getWritableDatabase();
-    db.delete(TABLE_CONTACTS, KEY_ID + " = ?",
-      new String[] { String.valueOf(contact.getID()) });
+    db.delete(TABLE_OPTIONS, KEY_ID + " = ?",
+      new String[] { String.valueOf(flashLightDatabase.getID()) });
     db.close();
   }
 
-  public int getContactsCount() {
-    String countQuery = "SELECT  * FROM " + TABLE_CONTACTS;
+  public int getFlashLightDatabaseCount() {
+    String countQuery = "SELECT  * FROM " + TABLE_OPTIONS;
     SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursor = db.rawQuery(countQuery, null);
     cursor.close();

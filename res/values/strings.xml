@@ -1,4 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
   <resources>
     <string name="app_name">FlashLight</string>
-  </resources>
+    <string name="accept">Accept</string>
+    <string name="status"><b>Status:</b></string>
+    <string name="eula_string">COPYRIGHTS:
+     
+    \nCopyright 2017 JustDriveApp. All Rights Reserved.
+     
+    \n\nThis software may not, in whole or in any part, be copied, reproduced, transmitted, translated (into any
+    language, natural or computer), stored in a retrieval system, reduced to any electronic medium or machine readable
+    format, or by any other form or means without prior consent, in writing, from JustDriveApp.
+     
+    \n\nYou are granted a limited license to use this software. The software may be used or copied only in accordance
+    with the terms of that license, which is described in the following paragraphs.
+     
+    \n\nTRADEMARKS:
+    \n\n[Software logos, icons, etc that are Trademarked]
+     
+    \n\nLICENSE:
+    \n\n\"THE SOFTWARE\" shall be taken to mean the software contained in this app and any subsequent versions
+    or upgrades received as a result of having obtained this app. \"END USER\" shall be taken as the original
+    user of the software.
+     
+    \n\nUSER has the non-exclusive right to the use of software only on a single device. User may not electronically
+    transfer the program from one device to another over any type of network. User may not distribute copies
+    of the software or the accompanying documentation to others either for a fee or without charge. User may not modify
+    or translate the program or documentation. User may not disassemble the program or allow it to be disassembled
+    into its constituent source code. User\'s use of the software indicates his/her acceptance of these terms
+    and conditions. If useer does not agree to these conditions, return the distribution media, documentation, and
+    associated materials to the vendor from whom the software was purchased, and/or uninstall the software from the device,
+    and erase the software from any and all storage devices upon which it may have been installed.
+     
+    \n\nThis license agreement shall be governed by the laws of The United States of America, Massachusetts and
+    shall inure to the benefit of JustDriveApp or its assigns.
+     
+    \n\nDISCLAIMER / LIMITATION OF LIABILITY:
+    \n\nUser acknowledges that the software may not be free from defects and may not satisfy all of uer\'s
+    needs. JustDriveApp warrants all media on which the software is distributed for 60 days to be free from defects
+    in normal use. The software and any accompanying written materials are licensed \"AS IS\". User\'s exclusive
+    remedy during the warranty period (if any) shall consist of replacement of distribution media if determined to be
+    faulty. In no event will JustDriveApp be liable for direct, indirect, incidental or consequential damage or
+    damages resulting from loss of use, or loss of anticipated profits resulting from any defect in the software,
+    even if it has been advised of the possibility of such damage. Some laws do not allow exclusion or limitation
+    of implied warranties or liabilities for incidental or consequential damages, so the above limitations or
+    exclusion may not apply. JustDriveApp will not be responsible for any harm that becomes of the user as a result 
+    of the app usage. 911 is always available from the user\'s lock screen unless the phone has been modified or the 
+    user removed their pin, password, lock, etc. 
+     
+    \n\nSPECIFIC RESTRICTIONS:
+    \n\nIn accordance with the COMPUTER SOFTWARE RENTAL ACT OF 1990, this software may not be rented, lent or leased.
+    \n\nThe software and accompanying documentation may not be provided by a \"Backup Service\" or any other vendor
+    which does not provide an original package as composed of JustDriveApp, including but not limited to all original
+    distribution media, documentation, registration cards, and insertions. Using the JustDriveApp without a pin, password, 
+    lock, etc., is not avised due to the users phone potentially not allowing the end user to dial an emergency number 
+    while they are driving. Please have a lock on your phone enabled and drive safe!</string>
+</resources>
+
