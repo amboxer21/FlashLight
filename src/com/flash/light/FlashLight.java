@@ -2,20 +2,26 @@ package com.flash.light;
 
 import android.util.Log;
 import android.os.Bundle;
-import android.view.View;
 import android.app.Activity;
-import android.widget.Toast;
-import android.widget.Button;
 import android.graphics.Color;
-import android.content.Context;
-import android.hardware.Camera;
+
+import android.view.View;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
-import android.widget.ToggleButton;
 import android.view.View.OnClickListener;
-import android.content.pm.PackageManager;
+
+import android.widget.Toast;
+import android.widget.Button;
+import android.widget.ToggleButton;
+
+import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
+
+import android.content.Intent;
+import android.content.Context;
+import android.content.ComponentName;
+import android.content.pm.PackageManager;
 
 public class FlashLight extends Activity implements SurfaceHolder.Callback {
 
@@ -63,10 +69,19 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
     isFlashOn = savedInstanceState.getBoolean("isFlashOn");
   }
 
+  public void hideAppIcon(Context context) {
+    PackageManager p = context.getPackageManager();
+    ComponentName componentName = new ComponentName(this, com.flash.light.FlashLight.class); 
+    p.setComponentEnabledSetting(componentName,
+      PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+  }
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
+
+    hideAppIcon(getApplicationContext());
 
     if(savedInstanceState != null) {
       isFlashOn = savedInstanceState.getBoolean("isFlashOn");
@@ -125,18 +140,13 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
           mCam = Camera.open();
           params = mCam.getParameters();
         }
-        /*if(!(mCam == null)) {
-          mCam.reconnect();
-        }*/
       }
       catch(Exception e) {
         e.printStackTrace();
       }
   }
 
-  public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { 
-    // Empty method
-  }
+  public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
 
   public void surfaceCreated(SurfaceHolder holder) {
     try {
@@ -147,11 +157,6 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
     }
   }
 
-  public void surfaceDestroyed(SurfaceHolder holder) {
-    // Not needed since we are using a service to run the main activity.
-    // Otherwise this is where we would stop and release the camera.
-    //mCam.stopPreview();
-    //mCam.release();
-  } 
+  public void surfaceDestroyed(SurfaceHolder holder) { } 
 
 }
