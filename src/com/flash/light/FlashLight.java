@@ -91,7 +91,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
-    hideAppIcon(getApplicationContext());
+    //hideAppIcon(getApplicationContext());
 
     if(savedInstanceState != null) {
       isFlashOn = savedInstanceState.getBoolean("isFlashOn");

