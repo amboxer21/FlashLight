@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:background="#cce0ff"
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
 
   <android.support.v7.widget.Toolbar
     android:elevation="8dp"
-    android:layout_margin="5dp"
+    android:layout_margin="3dp"
     android:id="@+id/action_toolbar_configure"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,8 +15,30 @@
     android:label="FlashLight Configure">
   </android.support.v7.widget.Toolbar>
   
-  <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"/>
+  <EditText
+    android:textColor="#C0C0C0"
+    android:layout_width="fill_parent"
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:hint="E-mail Address"
+    android:textColorHint="#3F51B5"
+    android:id="@+id/editEmailAddress"
+    android:layout_height="40dp"
+    android:background="@drawable/edit_text"
+    android:layout_below="@+id/action_toolbar_configure"/>
+
+  <EditText
+    android:textColor="#C0C0C0"
+    android:layout_width="fill_parent"
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:hint="Phone Number"
+    android:textColorHint="#3F51B5"
+    android:id="@+id/editPhoneNumber"
+    android:layout_height="40dp"
+    android:background="@drawable/edit_text"
+    android:layout_below="@+id/editEmailAddress"/>
 
 </RelativeLayout>

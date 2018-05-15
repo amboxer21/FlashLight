@@ -3,12 +3,17 @@ package com.flash.light;
 import android.os.Bundle;
 import android.app.Activity;
 
+import android.widget.Toast;
+import android.widget.EditText;
+
 import android.content.Intent;
 import android.content.ComponentName;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.MenuInflater;
+import android.view.View.OnTouchListener;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -17,10 +22,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.app.AppCompatCallback;
 
-public class Configure extends Activity implements AppCompatCallback {
+public class Configure extends Activity implements AppCompatCallback, OnTouchListener {
 
   private static AppCompatDelegate delegate;
   private static ComponentName componentName;
+
+  public void toast(String text) {
+    Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+  }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,5 +99,28 @@ public class Configure extends Activity implements AppCompatCallback {
 
     delegate.setSupportActionBar(toolbar);
     delegate.getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+    EditText editPhoneNumber  = (EditText)findViewById(R.id.editPhoneNumber);
+    EditText editEmailAddress = (EditText)findViewById(R.id.editEmailAddress);
+
+    editEmailAddress.setOnTouchListener(new OnTouchListener() {
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        return false;
+      }
+    });
+
+    editPhoneNumber.setOnTouchListener(new OnTouchListener() {
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        return false;
+      }
+    });
+
   }
+
+  public boolean onTouch(View v, MotionEvent event) {
+    return true;
+  }
+
 }
