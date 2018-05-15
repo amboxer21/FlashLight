@@ -39,13 +39,16 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
   private static AppCompatDelegate delegate;
   private static ComponentName componentName;
 
-  public void getDatabaseInfo()  {
+  private static String operation = "create";
+
+  //public void getDatabaseInfo()  {
+  public String getDatabaseInfo()  {
 
     List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
 
-    if(flashLightDatabase == null) {
-      return;
-    }
+    /*if(flashLightDatabase == null) {
+      break;
+    }*/
 
     for(FlashLightDatabase fldb : flashLightDatabase) {
       sEmailAddressDb = fldb.getEmail();
@@ -55,6 +58,10 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
     if(sEmailAddressDb != null) {
       editPhoneNumber.setText(sPhoneNumber);
       editEmailAddress.setText(sEmailAddress);
+      return "update"; 
+    }
+    else {
+      return "create";
     }
 
   }
@@ -122,14 +129,20 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
     toast("Updating DB now!");
     sPhoneNumber  = editPhoneNumber.getText().toString();
     sEmailAddress = editEmailAddress.getText().toString();
-    db.updateFlashLightDatabase(new FlashLightDatabase(1, "no", sEmailAddress, sPhoneNumber));
+    toast("" + sEmailAddress);
+    if(getDatabaseInfo().equals("update")) {
+      db.updateFlashLightDatabase(new FlashLightDatabase(1, "no", sEmailAddress, sPhoneNumber));
+    }
+    else if(getDatabaseInfo().equals("create")) {
+      db.addFlashLightDatabase(new FlashLightDatabase(1, "no", sEmailAddress, sPhoneNumber));
+    }
     finish();
   }
 
   @Override
   public void onStop() {
     super.onStop();
-    toast("Changes were not saved.");
+    //toast("Changes were not saved.");
   }
 
   @Override
