@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.content.Intent;
 import android.content.ComponentName;
 
+import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;

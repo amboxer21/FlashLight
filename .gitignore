@@ -1,5 +1,7 @@
 gen/*
 bin/*
+appcompat/gen/*
+appcompat/bin/*
 *.sw*
-build.xml
 *.backu*
+build.xml

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:background="#cce0ff"
+  android:background="#F0F0F0"
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
@@ -25,19 +25,21 @@
     android:textColorHint="#3F51B5"
     android:id="@+id/editEmailAddress"
     android:layout_height="40dp"
+    android:inputType="textNoSuggestions"
     android:background="@drawable/edit_text"
     android:layout_below="@+id/action_toolbar_configure"/>
 
   <EditText
     android:textColor="#C0C0C0"
     android:layout_width="fill_parent"
+    android:layout_height="40dp"
     android:layout_marginTop="5dp"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:hint="Phone Number"
     android:textColorHint="#3F51B5"
     android:id="@+id/editPhoneNumber"
-    android:layout_height="40dp"
+    android:inputType="textNoSuggestions"
     android:background="@drawable/edit_text"
     android:layout_below="@+id/editEmailAddress"/>
 
