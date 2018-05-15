@@ -6,16 +6,14 @@ public class FlashLightDatabase {
 
   String _hide;
   String _email;
-  String _password;
   String _phone_number;
 
   public FlashLightDatabase() { }
      
-  public FlashLightDatabase(int id, String hide, String email, String password, String phone_number) {
+  public FlashLightDatabase(int id, String hide, String email, String phone_number) {
     this._id   = id;
     this._hide = hide;
     this._email = email;
-    this._password = password;
     this._phone_number = phone_number;
   }
      
@@ -29,10 +27,6 @@ public class FlashLightDatabase {
 
   public String getEmail() {
     return this._email;
-  }
-
-  public String getPassword() {
-    return this._password;
   }
 
   public String getPhoneNumber() {
@@ -49,10 +43,6 @@ public class FlashLightDatabase {
 
   public void setEmail(String email) {
     this._email = email;
-  }
-
-  public void setPassword(String password) {
-    this._password = password;
   }
 
   public void setPhoneNumber(String phone_number) {

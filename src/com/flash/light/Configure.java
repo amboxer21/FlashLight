@@ -1,5 +1,6 @@
 package com.flash.light;
 
+import java.util.List;
 import android.os.Bundle;
 import android.app.Activity;
 
@@ -25,9 +26,38 @@ import android.support.v7.app.AppCompatCallback;
 
 public class Configure extends Activity implements AppCompatCallback, OnTouchListener {
 
+  private static String sPhoneNumber;
+  private static String sEmailAddress;
+
+  private static String sPhoneNumberDb;
+  private static String sEmailAddressDb;
+
+  private static EditText editPhoneNumber;
+  private static EditText editEmailAddress;
+
   private static DatabaseHandler db;
   private static AppCompatDelegate delegate;
   private static ComponentName componentName;
+
+  public void getDatabaseInfo()  {
+
+    List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
+
+    if(flashLightDatabase == null) {
+      return;
+    }
+
+    for(FlashLightDatabase fldb : flashLightDatabase) {
+      sEmailAddressDb = fldb.getEmail();
+      sPhoneNumberDb  = fldb.getPhoneNumber();
+    }
+
+    if(sEmailAddressDb != null) {
+      editPhoneNumber.setText(sPhoneNumber);
+      editEmailAddress.setText(sEmailAddress);
+    }
+
+  }
 
   public void toast(String text) {
     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
@@ -87,14 +117,28 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
   }
 
   @Override
+  public void onBackPressed() {
+    super.onBackPressed();
+    toast("Updating DB now!");
+    sPhoneNumber  = editPhoneNumber.getText().toString();
+    sEmailAddress = editEmailAddress.getText().toString();
+    db.updateFlashLightDatabase(new FlashLightDatabase(1, "no", sEmailAddress, sPhoneNumber));
+    finish();
+  }
+
+  @Override
   public void onStop() {
     super.onStop();
+    toast("Changes were not saved.");
   }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.configure);
+
+    db = DatabaseHandler(getApplicationContext());  
+    getDatabaseInfo();
 
     //hideAppIcon(getApplicationContext());
 
@@ -107,8 +151,8 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
     delegate.setSupportActionBar(toolbar);
     delegate.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-    EditText editPhoneNumber  = (EditText)findViewById(R.id.editPhoneNumber);
-    EditText editEmailAddress = (EditText)findViewById(R.id.editEmailAddress);
+    editPhoneNumber  = (EditText)findViewById(R.id.editPhoneNumber);
+    editEmailAddress = (EditText)findViewById(R.id.editEmailAddress);
 
     editEmailAddress.setOnTouchListener(new OnTouchListener() {
       @Override
