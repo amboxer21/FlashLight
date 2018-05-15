@@ -7,30 +7,15 @@
   <android.support.v7.widget.Toolbar
     android:elevation="8dp"
     android:layout_margin="5dp"
-    android:id="@+id/action_toolbar"
+    android:id="@+id/action_toolbar_configure"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#3F51B5"
-    android:label="FlashLight">
+    android:label="FlashLight Configure">
   </android.support.v7.widget.Toolbar>
   
   <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
-
-  <SurfaceView
-    android:id="@+id/preview"
-    android:layout_width="1dp"
-    android:layout_height="1dp"/>
-
-  <ToggleButton
-    android:textOn=""
-    android:textOff=""
-    android:id="@+id/flashLight"
-    android:background="@drawable/check"
-    android:layout_width="130dp"
-    android:layout_height="80dp"
-    android:layout_alignParentBottom="true"
-    android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
