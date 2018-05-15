@@ -137,7 +137,7 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
     super.onCreate(savedInstanceState);
     setContentView(R.layout.configure);
 
-    db = DatabaseHandler(getApplicationContext());  
+    db = new DatabaseHandler(Configure.this); 
     getDatabaseInfo();
 
     //hideAppIcon(getApplicationContext());
