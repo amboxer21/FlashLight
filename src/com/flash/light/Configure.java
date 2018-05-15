@@ -25,6 +25,7 @@ import android.support.v7.app.AppCompatCallback;
 
 public class Configure extends Activity implements AppCompatCallback, OnTouchListener {
 
+  private static DatabaseHandler db;
   private static AppCompatDelegate delegate;
   private static ComponentName componentName;
 
@@ -83,6 +84,11 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
         return super.onOptionsItemSelected(item);
     }
 
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
   }
 
   @Override

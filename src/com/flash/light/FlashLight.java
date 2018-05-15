@@ -43,10 +43,24 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
 
   private boolean hasCameraFlash;
   private boolean isFlashOn = false;
+  private static long backPressedTime = 0;
 
   private static AppCompatDelegate delegate;
   private static ComponentName componentName;
   private static PackageManager packageManager;
+
+  @Override
+  public void onBackPressed() {
+    long mTime = System.currentTimeMillis();
+    if(mTime - backPressedTime > 2000) {
+      backPressedTime = mTime;
+      Toast.makeText(this, "Press back again to close app.", Toast.LENGTH_SHORT).show();
+    }
+    else {
+      finish();
+      super.onBackPressed();
+    }
+  }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -167,7 +181,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
     Toolbar toolbar = (Toolbar) findViewById(R.id.action_toolbar);
 
     delegate.setSupportActionBar(toolbar);
-    delegate.getSupportActionBar().setDisplayShowTitleEnabled(false);
+    delegate.getSupportActionBar().setDisplayShowTitleEnabled(true);
 
     if(savedInstanceState != null) {
       isFlashOn = savedInstanceState.getBoolean("isFlashOn");
