@@ -203,7 +203,9 @@ public class Configure extends Activity implements AppCompatCallback {
 
         if(Math.abs(deltaX) > MIN_DISTANCE && x2 > x1) {
           Intent intent = new Intent(Configure.this, FlashLight.class);
+          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
           startActivity(intent);
+          finish();
         }
       break;
     }

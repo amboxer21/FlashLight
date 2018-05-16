@@ -287,6 +287,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
 
         if(Math.abs(deltaX) > MIN_DISTANCE && x2 < x1) {
           Intent intent = new Intent(FlashLight.this, Configure.class);
+          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
           startActivity(intent);
         }
       break;
