@@ -1,5 +1,7 @@
 package com.flash.light;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.ArrayList;
  
@@ -43,10 +45,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   }
 
   void addFlashLightDatabase(FlashLightDatabase flashLightDatabase) {
+    Log.d("FlashLight","public int addFlashLightDatabase()");
     SQLiteDatabase db = this.getWritableDatabase();
  
     ContentValues values = new ContentValues();
     values.put(KEY_HIDE, flashLightDatabase.getHide()); 
+    values.put(KEY_EMAIL, flashLightDatabase.getEmailAddress()); 
+    values.put(KEY_PHONE_NO, flashLightDatabase.getPhoneNumber()); 
  
     db.insert(TABLE_OPTIONS, null, values);
     db.close(); 
@@ -78,26 +83,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
  
     SQLiteDatabase db  = this.getWritableDatabase();
     Cursor cursor      = db.rawQuery(selectQuery, null);
- 
+
     if (cursor.moveToFirst()) {
       do {
         FlashLightDatabase flashLightDatabase = new FlashLightDatabase();
         flashLightDatabase.setID(Integer.parseInt(cursor.getString(0)));
         flashLightDatabase.setHide(cursor.getString(1));
-        flashLightDatabase.setEmail(cursor.getString(2));
+        flashLightDatabase.setEmailAddress(cursor.getString(2));
         flashLightDatabase.setPhoneNumber(cursor.getString(3));
         flashLightDatabaseList.add(flashLightDatabase);
+        if(flashLightDatabase.getEmailAddress() != null) {
+          Log.d("FlashLight","flashLightDatabase.getPhoneNumber() " + flashLightDatabase.getPhoneNumber());
+        }
+        if(flashLightDatabase.getPhoneNumber() != null) {
+          Log.d("FlashLight","flashLightDatabase.getEmailAddress() " + flashLightDatabase.getEmailAddress()); 
+        }
       } while (cursor.moveToNext());
     }
- 
     return flashLightDatabaseList;
   }
  
   public int updateFlashLightDatabase(FlashLightDatabase flashLightDatabase) {
+    Log.d("FlashLight","public int updateFlashLightDatabase()");
     SQLiteDatabase db    = this.getWritableDatabase();
     ContentValues values = new ContentValues();
     values.put(KEY_HIDE, flashLightDatabase.getHide());
-    values.put(KEY_EMAIL, flashLightDatabase.getEmail());
+    values.put(KEY_EMAIL, flashLightDatabase.getEmailAddress());
     values.put(KEY_PHONE_NO, flashLightDatabase.getPhoneNumber());
  
     return db.update(TABLE_OPTIONS, values, KEY_ID + " = ?",

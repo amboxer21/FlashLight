@@ -25,7 +25,7 @@ public class FlashLightDatabase {
     return this._hide;
   }
 
-  public String getEmail() {
+  public String getEmailAddress() {
     return this._email;
   }
 
@@ -41,7 +41,7 @@ public class FlashLightDatabase {
     this._hide = hide;
   }
 
-  public void setEmail(String email) {
+  public void setEmailAddress(String email) {
     this._email = email;
   }
 

@@ -1,6 +1,7 @@
 package com.flash.light;
 
 import java.util.List;
+import android.util.Log;
 import android.os.Bundle;
 import android.app.Activity;
 
@@ -26,45 +27,20 @@ import android.support.v7.app.AppCompatCallback;
 
 public class Configure extends Activity implements AppCompatCallback, OnTouchListener {
 
+  private static EditText editTextPhoneNumber;
+  private static EditText editTextEmailAddress;
+
   private static String sPhoneNumber;
   private static String sEmailAddress;
 
   private static String sPhoneNumberDb;
   private static String sEmailAddressDb;
 
-  private static EditText editPhoneNumber;
-  private static EditText editEmailAddress;
-
   private static DatabaseHandler db;
   private static AppCompatDelegate delegate;
   private static ComponentName componentName;
 
-  private static String operation = "create";
-
-  //public void getDatabaseInfo()  {
-  public String getDatabaseInfo()  {
-
-    List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
-
-    /*if(flashLightDatabase == null) {
-      break;
-    }*/
-
-    for(FlashLightDatabase fldb : flashLightDatabase) {
-      sEmailAddressDb = fldb.getEmail();
-      sPhoneNumberDb  = fldb.getPhoneNumber();
-    }
-
-    if(sEmailAddressDb != null) {
-      editPhoneNumber.setText(sPhoneNumber);
-      editEmailAddress.setText(sEmailAddress);
-      return "update"; 
-    }
-    else {
-      return "create";
-    }
-
-  }
+  private static String action = "create";
 
   public void toast(String text) {
     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
@@ -123,26 +99,56 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
 
   }
 
-  @Override
-  public void onBackPressed() {
-    super.onBackPressed();
-    toast("Updating DB now!");
-    sPhoneNumber  = editPhoneNumber.getText().toString();
-    sEmailAddress = editEmailAddress.getText().toString();
-    toast("" + sEmailAddress);
-    if(getDatabaseInfo().equals("update")) {
-      db.updateFlashLightDatabase(new FlashLightDatabase(1, "no", sEmailAddress, sPhoneNumber));
+  public boolean isEmpty(String string) {
+    if(string.length() == 0 || string.isEmpty() || string == null || string == "") {
+      return true;
     }
-    else if(getDatabaseInfo().equals("create")) {
-      db.addFlashLightDatabase(new FlashLightDatabase(1, "no", sEmailAddress, sPhoneNumber));
+    else {
+      return false;
     }
-    finish();
   }
 
   @Override
-  public void onStop() {
-    super.onStop();
-    //toast("Changes were not saved.");
+  public void onBackPressed() {
+    super.onBackPressed();
+    sPhoneNumber  = editTextPhoneNumber.getText().toString();
+    sEmailAddress = editTextEmailAddress.getText().toString();
+    toast("sEmailAddress " + sEmailAddress);
+    /*if(!isEmpty(sPhoneNumber) && !isEmpty(sEmailAddress) && action == "update") {
+      toast("Updating DB now!");
+      Log.d("FlashLight onBackPress()","sEmailAddress " + sEmailAddress);
+      Log.d("FlashLight onBackPress()","sPhoneNumber " + sPhoneNumber);
+      db.updateFlashLightDatabase(new FlashLightDatabase(1, "no", sEmailAddress, sPhoneNumber));
+    }
+    else if(!isEmpty(sPhoneNumber) && !isEmpty(sEmailAddress) && action == "create") {
+      toast("Creating DB now!");
+      db.addFlashLightDatabase(new FlashLightDatabase(1, "no", sEmailAddress, sPhoneNumber));
+    }*/
+    finish();
+  }
+
+  public void getDatabaseInfo()  {
+
+    List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
+
+    if(flashLightDatabase == null) {
+      return;
+    }
+
+    for(FlashLightDatabase fldb : flashLightDatabase) {
+      sPhoneNumberDb  = fldb.getPhoneNumber();
+      sEmailAddressDb = fldb.getEmailAddress();
+    }
+
+    if(sEmailAddressDb != null) {
+      //editTextPhoneNumber.setText(sPhoneNumber);
+      //editTextEmailAddress.setText(sEmailAddress);
+      action = "update";
+    }
+    else {
+      action = "create";
+    }
+
   }
 
   @Override
@@ -150,8 +156,15 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
     super.onCreate(savedInstanceState);
     setContentView(R.layout.configure);
 
+    editTextPhoneNumber  = (EditText)findViewById(R.id.editPhoneNumber);
+    editTextEmailAddress = (EditText)findViewById(R.id.editEmailAddress);
+
     db = new DatabaseHandler(Configure.this); 
+    
     getDatabaseInfo();
+
+    //editTextPhoneNumber.setText("sPhoneNumber");
+    //editTextEmailAddress.setText("sEmailAddress");
 
     //hideAppIcon(getApplicationContext());
 
@@ -164,19 +177,18 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
     delegate.setSupportActionBar(toolbar);
     delegate.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-    editPhoneNumber  = (EditText)findViewById(R.id.editPhoneNumber);
-    editEmailAddress = (EditText)findViewById(R.id.editEmailAddress);
-
-    editEmailAddress.setOnTouchListener(new OnTouchListener() {
+    editTextEmailAddress.setOnTouchListener(new OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
         return false;
       }
     });
 
-    editPhoneNumber.setOnTouchListener(new OnTouchListener() {
+    editTextPhoneNumber.setOnTouchListener(new OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
+        sEmailAddress  = editTextEmailAddress.getText().toString();
+        Log.d("FlashLight sEmailAddress ", "" + sEmailAddress);
         return false;
       }
     });
