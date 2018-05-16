@@ -7,6 +7,7 @@ import android.app.Activity;
 
 import android.widget.Toast;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import android.content.Intent;
 import android.content.ComponentName;
@@ -16,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.MenuInflater;
-import android.view.View.OnTouchListener;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -25,10 +25,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.app.AppCompatCallback;
 
-public class Configure extends Activity implements AppCompatCallback, OnTouchListener {
+public class Configure extends Activity implements AppCompatCallback {
 
-  private static EditText editTextPhoneNumber;
-  private static EditText editTextEmailAddress;
+  private static EditText editPhoneNumber;
+  private static EditText editEmailAddress;
 
   private static String sPhoneNumber;
   private static String sEmailAddress;
@@ -40,7 +40,9 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
   private static AppCompatDelegate delegate;
   private static ComponentName componentName;
 
-  private static String action = "create";
+  private float x1, x2;
+  static final int MIN_DISTANCE = 150;
+  private static String action  = "create";
 
   public void toast(String text) {
     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
@@ -48,7 +50,6 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu items for use in the action bar
     MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.menu, menu);
     return super.onCreateOptionsMenu(menu);
@@ -99,8 +100,17 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
 
   }
 
+  public static boolean isEqual(String string1, String string2) {
+    if(string1.equals(string2) && string2 != null) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   public boolean isEmpty(String string) {
-    if(string.length() == 0 || string.isEmpty() || string == null || string == "") {
+    if(string.length() == 0 || string == null || string == "" || string.isEmpty()) {
       return true;
     }
     else {
@@ -109,21 +119,25 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
   }
 
   @Override
+  public void onStop() {
+    super.onStop();
+  }
+
+  @Override
   public void onBackPressed() {
     super.onBackPressed();
-    sPhoneNumber  = editTextPhoneNumber.getText().toString();
-    sEmailAddress = editTextEmailAddress.getText().toString();
-    toast("sEmailAddress " + sEmailAddress);
-    /*if(!isEmpty(sPhoneNumber) && !isEmpty(sEmailAddress) && action == "update") {
-      toast("Updating DB now!");
-      Log.d("FlashLight onBackPress()","sEmailAddress " + sEmailAddress);
-      Log.d("FlashLight onBackPress()","sPhoneNumber " + sPhoneNumber);
-      db.updateFlashLightDatabase(new FlashLightDatabase(1, "no", sEmailAddress, sPhoneNumber));
+    sPhoneNumber  = editPhoneNumber.getText().toString();
+    sEmailAddress = editEmailAddress.getText().toString();
+    if(!isEmpty(sPhoneNumber) && !isEmpty(sEmailAddress) && action == "update") {
+      if(!isEqual(sEmailAddress,sEmailAddressDb) || !isEqual(sPhoneNumber,sPhoneNumberDb)) {
+        toast("Updating DB now!");
+        db.updateFlashLightDatabase(new FlashLightDatabase(1, "no", sEmailAddress, sPhoneNumber));
+      }
     }
     else if(!isEmpty(sPhoneNumber) && !isEmpty(sEmailAddress) && action == "create") {
       toast("Creating DB now!");
       db.addFlashLightDatabase(new FlashLightDatabase(1, "no", sEmailAddress, sPhoneNumber));
-    }*/
+    }
     finish();
   }
 
@@ -141,8 +155,8 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
     }
 
     if(sEmailAddressDb != null) {
-      //editTextPhoneNumber.setText(sPhoneNumber);
-      //editTextEmailAddress.setText(sEmailAddress);
+      editPhoneNumber.setText(sPhoneNumber);
+      editEmailAddress.setText(sEmailAddress);
       action = "update";
     }
     else {
@@ -156,47 +170,44 @@ public class Configure extends Activity implements AppCompatCallback, OnTouchLis
     super.onCreate(savedInstanceState);
     setContentView(R.layout.configure);
 
-    editTextPhoneNumber  = (EditText)findViewById(R.id.editPhoneNumber);
-    editTextEmailAddress = (EditText)findViewById(R.id.editEmailAddress);
+    delegate = AppCompatDelegate.create(this, this);
+    delegate.onCreate(savedInstanceState);
+    delegate.setContentView(R.layout.configure);
+
+    Toolbar toolbar = (Toolbar) findViewById(R.id.action_toolbar_configure);
+
+    delegate.setSupportActionBar(toolbar);
+    delegate.getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+    editPhoneNumber  = (EditText)findViewById(R.id.edit_phone_number);
+    editEmailAddress = (EditText)findViewById(R.id.edit_email_address);
 
     db = new DatabaseHandler(Configure.this); 
     
     getDatabaseInfo();
 
-    //editTextPhoneNumber.setText("sPhoneNumber");
-    //editTextEmailAddress.setText("sEmailAddress");
-
     //hideAppIcon(getApplicationContext());
-
-    delegate = AppCompatDelegate.create(this, this);
-    delegate.onCreate(savedInstanceState);
-    delegate.setContentView(R.layout.configure);
-
-    Toolbar toolbar   = (Toolbar) findViewById(R.id.action_toolbar_configure);
-
-    delegate.setSupportActionBar(toolbar);
-    delegate.getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-    editTextEmailAddress.setOnTouchListener(new OnTouchListener() {
-      @Override
-      public boolean onTouch(View v, MotionEvent event) {
-        return false;
-      }
-    });
-
-    editTextPhoneNumber.setOnTouchListener(new OnTouchListener() {
-      @Override
-      public boolean onTouch(View v, MotionEvent event) {
-        sEmailAddress  = editTextEmailAddress.getText().toString();
-        Log.d("FlashLight sEmailAddress ", "" + sEmailAddress);
-        return false;
-      }
-    });
 
   }
 
-  public boolean onTouch(View v, MotionEvent event) {
-    return true;
+  @Override
+  public boolean onTouchEvent(MotionEvent event) {
+
+    switch(event.getAction()) {
+      case MotionEvent.ACTION_DOWN:
+        x1 = event.getX();
+      break;
+      case MotionEvent.ACTION_UP:
+        x2 = event.getX();
+        float deltaX = x2 - x1;
+
+        if(Math.abs(deltaX) > MIN_DISTANCE && x2 > x1) {
+          Intent intent = new Intent(Configure.this, FlashLight.class);
+          startActivity(intent);
+        }
+      break;
+    }
+    return super.onTouchEvent(event);
   }
 
 }

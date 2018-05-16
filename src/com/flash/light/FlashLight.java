@@ -35,6 +35,9 @@ import android.support.v7.app.AppCompatCallback;
 
 public class FlashLight extends Activity implements SurfaceHolder.Callback, AppCompatCallback {
 
+  private float x1, x2;
+  static final int MIN_DISTANCE = 150;
+
   private Camera mCam;
   private Parameters params;
   private ToggleButton flashLight;
@@ -48,6 +51,10 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
   private static AppCompatDelegate delegate;
   private static ComponentName componentName;
   private static PackageManager packageManager;
+
+  public void toast(String text) {
+    Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+  }
 
   @Override
   public void onBackPressed() {
@@ -121,8 +128,17 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
   @Override
   public void onDestroy() {
     super.onDestroy();
-    mCam.stopPreview();
-    mCam.release();
+      try {
+        if(mCam != null) {
+          Log.e("FlashLight onDestroy() ", "Releasing cam.");
+          mCam.stopPreview();
+          mCam.release();
+        }
+      }
+      catch(Exception e) {
+        e.printStackTrace();
+        Log.e("FlashLight onDestroy() Exception e ","" + e.toString());
+      }
   }
 
   @Override
@@ -226,8 +242,8 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
           }
         }
         catch(Exception e) {
-          mCam.release();
-	  Log.e("FlashLight","onClick Exception e: " + e.toString());
+          //mCam.release();
+          Log.e("FlashLight","onClick Exception e: " + e.toString());
           e.printStackTrace();
         }
       }
@@ -243,6 +259,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
       }
       catch(Exception e) {
         e.printStackTrace();
+        Log.e("FlashLight getCamera() Exception e ","" + e.toString());
       }
   }
 
@@ -255,6 +272,26 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
     catch(Exception e) {
       e.printStackTrace();
     }
+  }
+
+  @Override
+  public boolean onTouchEvent(MotionEvent event) { 
+
+    switch(event.getAction()) {
+      case MotionEvent.ACTION_DOWN:
+        x1 = event.getX(); 
+      break;
+      case MotionEvent.ACTION_UP:
+        x2 = event.getX();
+        float deltaX = x2 - x1;
+
+        if(Math.abs(deltaX) > MIN_DISTANCE && x2 < x1) {
+          Intent intent = new Intent(FlashLight.this, Configure.class);
+          startActivity(intent);
+        }
+      break;
+    }           
+    return super.onTouchEvent(event);       
   }
 
   public void surfaceDestroyed(SurfaceHolder holder) { } 
