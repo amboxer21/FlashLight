@@ -110,7 +110,7 @@ public class Configure extends Activity implements AppCompatCallback {
   }
 
   public boolean isEmpty(String string) {
-    if(string.length() == 0 || string == null || string == "" || string.isEmpty()) {
+    if(string == null || string == "" || string.length() == 0 || string.isEmpty()) {
       return true;
     }
     else {
@@ -125,28 +125,28 @@ public class Configure extends Activity implements AppCompatCallback {
 
   @Override
   public void onBackPressed() {
-    super.onBackPressed();
     sPhoneNumber  = editPhoneNumber.getText().toString();
     sEmailAddress = editEmailAddress.getText().toString();
-    if(!isEmpty(sPhoneNumber) && !isEmpty(sEmailAddress) && action == "update") {
+    if(!isEmpty(sPhoneNumber) && !isEmpty(sEmailAddress) && getDatabaseInfo().equals("update")) {
       if(!isEqual(sEmailAddress,sEmailAddressDb) || !isEqual(sPhoneNumber,sPhoneNumberDb)) {
         toast("Updating DB now!");
         db.updateFlashLightDatabase(new FlashLightDatabase(1, "no", sEmailAddress, sPhoneNumber));
       }
     }
-    else if(!isEmpty(sPhoneNumber) && !isEmpty(sEmailAddress) && action == "create") {
+    else if(!isEmpty(sPhoneNumber) && !isEmpty(sEmailAddress) && getDatabaseInfo().equals("create")) {
       toast("Creating DB now!");
       db.addFlashLightDatabase(new FlashLightDatabase(1, "no", sEmailAddress, sPhoneNumber));
     }
     finish();
+    super.onBackPressed();
   }
 
-  public void getDatabaseInfo()  {
+  public String getDatabaseInfo()  {
 
     List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
 
     if(flashLightDatabase == null) {
-      return;
+      return null;
     }
 
     for(FlashLightDatabase fldb : flashLightDatabase) {
@@ -155,14 +155,30 @@ public class Configure extends Activity implements AppCompatCallback {
     }
 
     if(sEmailAddressDb != null) {
-      editPhoneNumber.setText(sPhoneNumber);
-      editEmailAddress.setText(sEmailAddress);
-      action = "update";
+      return "update";
     }
     else {
-      action = "create";
+      return "create";
     }
 
+  }
+
+  public String getPhoneNumber() {
+    if(!isEmpty(sPhoneNumberDb)) {
+      return sPhoneNumberDb;
+    }
+    else {
+      return "null";
+    }
+  }
+
+  public String getEmailAddress() {
+    if(!isEmpty(sEmailAddressDb)) {
+      return sEmailAddressDb;
+    }
+    else {
+      return "null";
+    }
   }
 
   @Override
@@ -182,9 +198,13 @@ public class Configure extends Activity implements AppCompatCallback {
     editPhoneNumber  = (EditText)findViewById(R.id.edit_phone_number);
     editEmailAddress = (EditText)findViewById(R.id.edit_email_address);
 
-    db = new DatabaseHandler(Configure.this); 
+    //db = new DatabaseHandler(Configure.this); 
+    db = new DatabaseHandler(getApplicationContext()); 
     
-    getDatabaseInfo();
+    if(getDatabaseInfo().equals("update")) {
+      editPhoneNumber.setText(sPhoneNumber);
+      editEmailAddress.setText(sEmailAddress);
+    }
 
     //hideAppIcon(getApplicationContext());
 
@@ -202,9 +222,9 @@ public class Configure extends Activity implements AppCompatCallback {
         float deltaX = x2 - x1;
 
         if(Math.abs(deltaX) > MIN_DISTANCE && x2 > x1) {
-          Intent intent = new Intent(Configure.this, FlashLight.class);
+          /*Intent intent = new Intent(Configure.this, FlashLight.class);
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-          startActivity(intent);
+          startActivity(intent);*/
           finish();
         }
       break;

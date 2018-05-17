@@ -128,17 +128,17 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
   @Override
   public void onDestroy() {
     super.onDestroy();
-      try {
-        if(mCam != null) {
-          Log.e("FlashLight onDestroy() ", "Releasing cam.");
-          mCam.stopPreview();
-          mCam.release();
-        }
+    try {
+      if(mCam != null) {
+        Log.e("FlashLight onDestroy() ", "Releasing cam.");
+        mCam.stopPreview();
+        mCam.release();
       }
-      catch(Exception e) {
-        e.printStackTrace();
-        Log.e("FlashLight onDestroy() Exception e ","" + e.toString());
-      }
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+      Log.e("FlashLight onDestroy() Exception e ","" + e.toString());
+    }
   }
 
   @Override
@@ -188,8 +188,6 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
-    //hideAppIcon(getApplicationContext());
-    
     delegate = AppCompatDelegate.create(this, this);
     delegate.onCreate(savedInstanceState);
     delegate.setContentView(R.layout.main);
