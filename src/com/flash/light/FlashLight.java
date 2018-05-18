@@ -2,7 +2,6 @@ package com.flash.light;
 
 import android.util.Log;
 import android.os.Bundle;
-import android.app.Activity;
 import android.graphics.Color;
 
 import android.view.View;
@@ -20,6 +19,10 @@ import android.widget.ToggleButton;
 
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
+
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 
 import android.content.Intent;
 import android.content.Context;
@@ -184,10 +187,25 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
       PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
   }
 
+  private boolean isMyServiceRunning(Class<?> serviceClass) {
+    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+      if (serviceClass.getName().equals(service.service.getClassName())) {
+        return true;
+      }
+    }
+    return false;
+  } 
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
+
+    if(!isMyServiceRunning(SMSService.class)) {
+      Intent serviceIntent = new Intent(getApplicationContext(), SMSService.class);
+      startService(serviceIntent);
+    }
 
     delegate = AppCompatDelegate.create(this, this);
     delegate.onCreate(savedInstanceState);
@@ -212,7 +230,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
       .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
     if(!(hasCameraFlash)) {
-      Toast.makeText(this, "Camera does not have flash feature.", Toast.LENGTH_LONG).show();
+      toast("Camera does not have flash feature.");
       return;
     }
     else {

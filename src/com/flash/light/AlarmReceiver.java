@@ -1,12 +1,15 @@
 package com.flash.light;
 
-import android.app.Service;
+import android.util.Log;
 import android.widget.Toast;
-import android.content.Intent;
-import android.content.Context;
 import android.os.PowerManager;
+
+import android.app.Service;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+
+import android.content.Intent;
+import android.content.Context;
 import android.content.BroadcastReceiver;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -14,8 +17,12 @@ public class AlarmReceiver extends BroadcastReceiver {
   private static AlarmManager am;
   private static PendingIntent pIntent;
 
+  private static final String TAG = "FlashLight AlarmReceiver";
+
   @Override
   public void onReceive(Context context, Intent intent) {
+
+    Log.i(TAG, "Entering onReceive()");
 
     PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
     PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");

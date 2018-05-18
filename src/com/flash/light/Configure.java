@@ -143,6 +143,10 @@ public class Configure extends Activity implements AppCompatCallback {
 
   public String getDatabaseInfo()  {
 
+    if(db == null) {
+      return "null";
+    }
+
     List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
 
     if(flashLightDatabase == null) {
