@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
   <resources>
-    <string name="app_name">FlashLight</string>
     <string name="accept">Accept</string>
-    <string name="status"><b>Status:</b></string>
+    <string name="app_name">FlashLight</string>
+    <string name="menu_configure">Configure</string>
+    <string name="email_address">E-mail Address</string>
+    <string name="phone_number"><b>Phone Number</b></string>
+    <string name="flashlight_configure">FlashLight Configure</string>
     <string name="eula_string">COPYRIGHTS:
      
     \nCopyright 2017 JustDriveApp. All Rights Reserved.

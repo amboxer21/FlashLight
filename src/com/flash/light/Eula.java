@@ -59,7 +59,7 @@ public class Eula {
                                     SharedPreferences.Editor editor = prefs
                                             .edit();
                                     editor.putBoolean(eulaKey, true);
-                                    editor.commit();
+                                    editor.apply();
  
                                     dialogInterface.dismiss();
  

@@ -11,7 +11,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#3F51B5"
-    android:label="FlashLight Configure">
+    android:label="@string/flashlight_configure">
   </android.support.v7.widget.Toolbar>
   
   <EditText
@@ -20,11 +20,11 @@
     android:layout_marginTop="5dp"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
-    android:hint="E-mail Address"
+    android:hint="@string/email_address"
     android:textColorHint="#3F51B5"
     android:id="@+id/edit_email_address"
     android:layout_height="40dp"
-    android:inputType="textNoSuggestions"
+    android:inputType="textEmailAddress"
     android:background="@drawable/edit_text"
     android:layout_below="@+id/action_toolbar_configure"/>
 
@@ -35,10 +35,10 @@
     android:layout_marginTop="5dp"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
-    android:hint="Phone Number"
+    android:hint="@string/phone_number"
     android:textColorHint="#3F51B5"
     android:id="@+id/edit_phone_number"
-    android:inputType="textNoSuggestions"
+    android:inputType="phone"
     android:background="@drawable/edit_text"
     android:layout_below="@+id/edit_email_address"/>
 

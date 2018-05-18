@@ -72,6 +72,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         cursor.getString(2),
         cursor.getString(3));
 
+      if(cursor != null) {
+        cursor.close();
+      }
       return flashLightDatabase;
   }
      
@@ -99,6 +102,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
           Log.d("FlashLight","flashLightDatabase.getEmailAddress() " + flashLightDatabase.getEmailAddress()); 
         }
       } while (cursor.moveToNext());
+    }
+    if(cursor != null) {
+      cursor.close();
     }
     return flashLightDatabaseList;
   }

