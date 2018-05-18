@@ -19,7 +19,7 @@ public class SMSListener extends BroadcastReceiver {
   private static GmailSender sender;
 
   public  static Object[] pdus;
-  public  static  Context context;
+  public  static Context context;
   public  static String mBody = null;
 
   /*private static String phoneNumberString = "8484820667";
@@ -30,6 +30,7 @@ public class SMSListener extends BroadcastReceiver {
 
   public SMSListener() {
     Configure configure = new Configure();
+    configure.initDatabase();
     if(configure.getDatabaseInfo().equals("update")) {
       if(!configure.getEmailAddress().equals("null")) {
         gmailEmailString = configure.getEmailAddress();

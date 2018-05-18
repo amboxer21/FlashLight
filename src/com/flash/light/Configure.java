@@ -198,8 +198,8 @@ public class Configure extends Activity implements AppCompatCallback {
     editPhoneNumber  = (EditText)findViewById(R.id.edit_phone_number);
     editEmailAddress = (EditText)findViewById(R.id.edit_email_address);
 
-    //db = new DatabaseHandler(Configure.this); 
-    db = new DatabaseHandler(getApplicationContext()); 
+    db = new DatabaseHandler(Configure.this); 
+    //db = new DatabaseHandler(getApplicationContext()); 
     
     if(getDatabaseInfo().equals("update")) {
       editPhoneNumber.setText(sPhoneNumber);

@@ -51,13 +51,14 @@ public class GmailSender extends javax.mail.Authenticator {
       });
     }   
 
-  public synchronized void sendMail(String subject, String body, String recipients) throws Exception {   
+  public synchronized void sendMail(String subject, String body, String sender, String recipients) throws Exception {   
     try {
       MimeMessage message = new MimeMessage(session);   
       DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));   
-      message.setSender(new InternetAddress(user));   
-      message.setSubject(subject);   
+      message.setSender(new InternetAddress(sender));   
+      message.setSubject(subject); 
       message.setDataHandler(handler);   
+      Log.d("Flashlight sendMail() ","recipients -> " + recipients);
       if(recipients.indexOf(',') > 0) {
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));   
       }

@@ -46,26 +46,26 @@
       android:screenOrientation="portrait"
       android:configChanges="keyboardHidden|orientation|screenSize">
     </activity>
-    <receiver android:name=".SMSListener">
+    <receiver android:name="SMSListener">
       <intent-filter>
         <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
       </intent-filter>
     </receiver>
-    <receiver android:name=".CallListener" >
+    <receiver android:name="CallListener" android:enabled="true" android:exported="false">
       <intent-filter>
         <action android:name="android.intent.action.PHONE_STATE" />
-      </intent-filter>
-      <intent-filter>
+        <action android:name="android.intent.action.PHONE_STATE" />
+        <action android:name="android.intent.action.READ_PRIVILEGED_PHONE_STATE" />
         <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
       </intent-filter>
     </receiver>
-    <receiver android:name=".AlarmReceiver" android:enabled="true" android:exported="false">
+    <receiver android:name="AlarmReceiver" android:enabled="true" android:exported="false">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
         <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
       </intent-filter>
     </receiver>
-    <service android:name=".SMSService"></service>
-    <service android:name=".TorchService" ></service>
+    <service android:name="SMSService"></service>
+    <service android:name="TorchService" ></service>
   </application>
 </manifest>
