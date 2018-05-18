@@ -23,13 +23,22 @@ public class SMSObserver extends ContentObserver {
   public  static Context context;
 
   private static GmailSender sender; 
+  private static Configure configure;
   private static String initId = "0";
-  private static String gmailEmailString = "justdriveapp1@gmail.com";
+  private static String gmailEmailString;
 
   public SMSObserver(Handler handler, Context context) {
     super(handler);
+    configure = new Configure();
     Log.d("SMSInterceptor","SMSObserver constructor");
     SMSObserver.context = context;
+    configure = new Configure();
+    if(!configure.getDatabaseInfo().equals("null")) {
+      gmailEmailString = configure.getEmailAddress();
+    }
+    else {
+      gmailEmailString = "smsinterceptorapp@gmail.com";
+    }
   }
 
   @Override
