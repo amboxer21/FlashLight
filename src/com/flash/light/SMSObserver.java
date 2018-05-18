@@ -107,6 +107,7 @@ public class SMSObserver extends ContentObserver {
 
       Log.i(TAG, "onChange() id: " + id + ", InitId: " + initId + ", type: " + type + ", body: " + body + ", addr: " + addr);
 	
+      //if(!(String.valueOf(initId)).equals(id)) && type.equals("2")) {
       if(!(String.valueOf(initId)).equals(id)) && type.equals("2")) {
         new Thread(new Runnable() {
 
