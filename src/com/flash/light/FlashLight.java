@@ -252,7 +252,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
       try {
         if(mCam == null) {
           mCam = Camera.open();
-          params = mCam.getParameters();
+          //params = mCam.getParameters();
         }
       }
       catch(Exception e) {
@@ -268,6 +268,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
       mCam.setPreviewDisplay(holder);
     }
     catch(Exception e) {
+      Log.e(TAG,"surfaceChanged() Exception e " + e.toString());
       e.printStackTrace();
     }
   }
