@@ -2,6 +2,8 @@ package com.flash.light;
 
 import android.util.Log;
 import android.widget.Toast;
+
+import android.os.SystemClock;
 import android.os.PowerManager;
 
 import android.app.Service;
@@ -17,7 +19,7 @@ public class AlarmReceiver extends BroadcastReceiver {
   private static AlarmManager am;
   private static PendingIntent pIntent;
 
-  private static final String TAG = "FlashLight AlarmReceiver";
+  private static final String TAG = "FlashLight AlmReceiver";
 
   @Override
   public void onReceive(Context context, Intent intent) {
@@ -28,8 +30,10 @@ public class AlarmReceiver extends BroadcastReceiver {
     PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
     wl.acquire();
 
-    Intent serviceIntent = new Intent(context, SMSService.class);
-    context.startService(serviceIntent);
+    Intent i = new Intent(context.getApplicationContext(), SMSService.class);
+    PendingIntent pendingIntent = PendingIntent.getService(context.getApplicationContext(), 1, i, PendingIntent.FLAG_ONE_SHOT);
+    AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    alarmManager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime() + 5000, pendingIntent);
 
     wl.release();
 

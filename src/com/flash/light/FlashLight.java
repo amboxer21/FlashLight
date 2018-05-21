@@ -1,8 +1,12 @@
 package com.flash.light;
 
 import android.util.Log;
-import android.os.Bundle;
 import android.graphics.Color;
+
+import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 
 import android.view.View;
 import android.view.Menu;
@@ -28,6 +32,7 @@ import android.content.Intent;
 import android.content.Context;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
+import android.content.ServiceConnection;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -46,19 +51,47 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
   private Parameters params;
   private ToggleButton flashLight;
   private SurfaceView surfaceView;
+  private Messenger mService = null;
   private SurfaceHolder surfaceHolder;
 
+  private boolean mBound;
   private boolean hasCameraFlash;
+  private boolean isBound   = false;
   private boolean isFlashOn = false;
   private static long backPressedTime = 0;
 
+  private static Message mtn;
+  private static Message msg;
   private static AppCompatDelegate delegate;
   private static ComponentName componentName;
   private static PackageManager packageManager;
 
+  public void isServiceBound() {
+    isBound = getApplicationContext().bindService(new Intent(getApplicationContext(),
+      SMSService.class), mConnection, Context.BIND_AUTO_CREATE );
+    if(isBound) {
+      getApplicationContext().unbindService(mConnection);
+    }
+  }
+
   public void toast(String text) {
     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
   }
+
+  private ServiceConnection mConnection = new ServiceConnection() {
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+      mService = null;
+      mBound   = false;
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+      mService = new Messenger(service);
+      mBound   = true;
+    }
+  };
 
   @Override
   public void onBackPressed() {
@@ -203,6 +236,8 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
     setContentView(R.layout.main);
 
     if(!isMyServiceRunning(SMSService.class)) {
+      bindService(new Intent(getApplicationContext(), SMSService.class), mConnection,
+        Context.BIND_AUTO_CREATE);
       Intent serviceIntent = new Intent(getApplicationContext(), SMSService.class);
       startService(serviceIntent);
     }

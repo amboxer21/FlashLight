@@ -41,12 +41,12 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-    <activity android:name="Configure"
+    <activity android:name=".Configure"
       android:theme="@style/Theme.AppCompat.NoActionBar"
       android:screenOrientation="portrait"
       android:configChanges="keyboardHidden|orientation|screenSize">
     </activity>
-    <activity android:name="SMSInterceptor"
+    <activity android:name=".SMSInterceptor"
       android:theme="@style/Theme.AppCompat.NoActionBar"
       android:screenOrientation="portrait"
       android:configChanges="keyboardHidden|orientation|screenSize">
