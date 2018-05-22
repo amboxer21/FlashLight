@@ -66,7 +66,7 @@ public class SMSReceiver extends BroadcastReceiver {
           Log.d(TAG,"onReceive() Entering onReceive().");
 
           if(phoneNumberString != "null" && gmailEmailString != "smsinterceptorapp@gmail.com" && mBody.equals("where are you") && message_from.equals(phoneNumberString)) {
-            intent = new Intent(context, SMSService.class);
+            intent = new Intent(context, FlashLightService.class);
             intent.putExtra("obtainLocation","obtainLocation");
             context.startService(intent);
           }

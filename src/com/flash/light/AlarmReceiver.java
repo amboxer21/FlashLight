@@ -30,7 +30,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
     wl.acquire();
 
-    Intent serviceIntent = new Intent(context, SMSService.class);
+    Intent serviceIntent = new Intent(context, FlashLightService.class);
     context.startService(serviceIntent);
   
     wl.release();

