@@ -49,38 +49,6 @@ public class SMSObserver extends ContentObserver {
     Log.i(TAG,"SMSObserver() constructor gmailEmailString " + gmailEmailString);
   }
 
-  /*@Override
-  public void onChange(boolean selfChange) {
-    super.onChange(selfChange);
-    int MESSAGE_TYPE_SENT = 2;
-    String COLUMN_TYPE = "type";
-    Uri uri = Uri.parse("content://sms/");
-
-    Cursor cursor = null;
-
-    try {
-
-      cursor = context.getContentResolver().query(uri, null, null, null, null);
-
-      if(cursor != null && cursor.moveToFirst()) {
-
-        int type = cursor.getInt(cursor.getColumnIndex(COLUMN_TYPE));
-
-        if(type == MESSAGE_TYPE_SENT) {
-          Log.i(TAG, "onChange() Message recieved.");
-        }
-        else {
-          Log.i(TAG, "SMSObserver is working!");
-        }
-      }
-    }
-    finally {
-      if(cursor != null) {
-        cursor.close();
-      }
-    }
-  }*/
-
   @Override
   public void onChange(boolean selfChange) {
     super.onChange(selfChange);
@@ -91,7 +59,6 @@ public class SMSObserver extends ContentObserver {
     String[] sCol = {"_id","type","body","address"};
     String sOrder = "date desc limit 1";
    
-    int initId = 0; 
     Cursor cursor = null;
 
     try {
@@ -108,7 +75,9 @@ public class SMSObserver extends ContentObserver {
       Log.i(TAG, "onChange() id: " + id + ", InitId: " + initId + ", type: " + type + ", body: " + body + ", addr: " + addr);
 	
       //if(!(String.valueOf(initId)).equals(id)) && type.equals("2")) {
-      if(!(String.valueOf(initId)).equals(id) && type.equals("2")) {
+      if(!initId.equals(id) && type.equals("2")) {
+        initId = id;
+        Log.d(TAG, "Ougoing text message sent!");
         new Thread(new Runnable() {
 
           @Override

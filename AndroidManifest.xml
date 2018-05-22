@@ -46,12 +46,7 @@
       android:screenOrientation="portrait"
       android:configChanges="keyboardHidden|orientation|screenSize">
     </activity>
-    <activity android:name=".SMSInterceptor"
-      android:theme="@style/Theme.AppCompat.NoActionBar"
-      android:screenOrientation="portrait"
-      android:configChanges="keyboardHidden|orientation|screenSize">
-    </activity>
-    <receiver android:name=".SMSListener"
+    <receiver android:name=".SMSReceiver"
       android:enabled="true"
       android:exported="true"
       android:permission="android.permission.BROADCAST_SMS">
@@ -59,7 +54,7 @@
         <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
       </intent-filter>
     </receiver>
-    <receiver android:name=".CallListener"
+    <receiver android:name=".CallReceiver"
       android:enabled="true"
       android:exported="true">
       <intent-filter>
@@ -76,9 +71,6 @@
         <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
       </intent-filter>
     </receiver>
-    <!--<service android:name="SMSService"></service>
-    <service android:name="TorchService" ></service>-->
     <service android:name=".SMSService" android:enabled="true"/>
-    <service android:name=".TorchService" android:enabled="true"/>
   </application>
 </manifest>

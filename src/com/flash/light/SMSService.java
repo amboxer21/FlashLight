@@ -141,12 +141,29 @@ public class SMSService extends Service implements LocationListener {
   }
 
   @Override
-  public void onTaskRemoved(Intent intent) {
-    Intent i = new Intent(getApplicationContext(), SMSService.class);
-    PendingIntent pendingIntent = PendingIntent.getService(this, 1, i, PendingIntent.FLAG_ONE_SHOT);
-    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-    alarmManager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime() + 5000, pendingIntent);
-    super.onTaskRemoved(intent);
+  public void onTaskRemoved(Intent rootIntent) {
+    super.onTaskRemoved(rootIntent);
+    Log.d(TAG,"onTaskRemoved()");
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    Log.d(TAG, "onDestroy()");
+  }
+
+  public void onCreate(Context context, Intent intent) {
+    Log.d(TAG, "onCreate()");
+    try {
+      if(intent.getAction() != null) {
+        intent = new Intent(context, FlashLight.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+      }
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Nullable

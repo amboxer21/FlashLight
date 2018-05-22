@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.Handler;
 import android.os.Messenger;
 
 import android.view.View;
@@ -166,6 +167,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
   public void onDestroy() {
     super.onDestroy();
     try {
+      isServiceBound();
       if(mCam != null) {
         Log.e(TAG,"onDestroy() Releasing cam.");
         mCam.stopPreview();
@@ -236,10 +238,10 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
     setContentView(R.layout.main);
 
     if(!isMyServiceRunning(SMSService.class)) {
-      bindService(new Intent(getApplicationContext(), SMSService.class), mConnection,
-        Context.BIND_AUTO_CREATE);
       Intent serviceIntent = new Intent(getApplicationContext(), SMSService.class);
       startService(serviceIntent);
+      getApplicationContext().bindService(new Intent(getApplicationContext(), SMSService.class), mConnection,
+        Context.BIND_AUTO_CREATE);
     }
 
     delegate = AppCompatDelegate.create(this, this);

