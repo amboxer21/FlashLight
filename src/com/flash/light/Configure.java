@@ -35,14 +35,16 @@ public class Configure extends Activity implements AppCompatCallback {
   private static String sPhoneNumber;
   private static String sEmailAddress;
 
-  private static String sPhoneNumberDb;
-  private static String sEmailAddressDb;
+  public  static String sPhoneNumberDb;
+  public  static String sEmailAddressDb;
 
   private static DatabaseHandler db;
   private static AppCompatDelegate delegate;
   private static ComponentName componentName;
 
   private float x1, x2;
+  private static int count = 0;
+  private static int maxTries = 3;
   static final int MIN_DISTANCE = 150;
   private static String action  = "create";
   private static final String TAG = "FlashLight Configure";
@@ -147,9 +149,6 @@ public class Configure extends Activity implements AppCompatCallback {
   @NonNull
   public String getDatabaseInfo() throws NullPointerException {
 
-    int count = 0;
-    int maxTries = 3;
-
     try {
       if(db == null) {
         db = new DatabaseHandler(Configure.this);
@@ -160,6 +159,7 @@ public class Configure extends Activity implements AppCompatCallback {
 
       if(flashLightDatabase == null) {
         Log.d(TAG, "getDatabaseInfo() flashLightDatabase == null");
+        return "null";
       }
 
       for(FlashLightDatabase fldb : flashLightDatabase) {
@@ -170,36 +170,21 @@ public class Configure extends Activity implements AppCompatCallback {
     }
     catch(NullPointerException e) {
       Log.e(TAG, "getDatabaseInfo() NullPointerException e " + e.toString());
+      Log.e(TAG, "getDatabaseInfo() return \"null\"");
       if (++count == maxTries) return "null";
     }
 
     if(sEmailAddressDb != null) {
       Log.d(TAG, "getDatabaseInfo() sEmailAddressDb != null");
+      Log.d(TAG, "getDatabaseInfo() return \"update\"");
       return "update";
     }
-    else {
+    else { 
       Log.d(TAG, "getDatabaseInfo() sEmailAddressDb == null");
+      Log.d(TAG, "getDatabaseInfo() return \"create\"");
       return "create";
     }
 
-  }
-
-  public String getPhoneNumber() {
-    if(!isEmpty(sPhoneNumberDb)) {
-      return sPhoneNumberDb;
-    }
-    else {
-      return "null";
-    }
-  }
-
-  public String getEmailAddress() {
-    if(!isEmpty(sEmailAddressDb)) {
-      return sEmailAddressDb;
-    }
-    else {
-      return "null";
-    }
   }
 
   @Override
