@@ -18,10 +18,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.MenuInflater;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.view.ActionMode;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.app.AppCompatCallback;
 
@@ -43,6 +45,7 @@ public class Configure extends Activity implements AppCompatCallback {
   private float x1, x2;
   static final int MIN_DISTANCE = 150;
   private static String action  = "create";
+  private static final String TAG = "FlashLight Configure";
 
   public void toast(String text) {
     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
@@ -141,27 +144,41 @@ public class Configure extends Activity implements AppCompatCallback {
     super.onBackPressed();
   }
 
-  public String getDatabaseInfo()  {
+  @NonNull
+  public String getDatabaseInfo() throws NullPointerException {
 
-    if(db == null) {
-      return "null";
+    int count = 0;
+    int maxTries = 3;
+
+    try {
+      if(db == null) {
+        db = new DatabaseHandler(Configure.this);
+        Log.d(TAG, "getDatabaseInfo() db == null");
+      }
+
+      List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
+
+      if(flashLightDatabase == null) {
+        Log.d(TAG, "getDatabaseInfo() flashLightDatabase == null");
+      }
+
+      for(FlashLightDatabase fldb : flashLightDatabase) {
+        sPhoneNumberDb  = fldb.getPhoneNumber();
+        sEmailAddressDb = fldb.getEmailAddress();
+      }
+
     }
-
-    List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
-
-    if(flashLightDatabase == null) {
-      return null;
-    }
-
-    for(FlashLightDatabase fldb : flashLightDatabase) {
-      sPhoneNumberDb  = fldb.getPhoneNumber();
-      sEmailAddressDb = fldb.getEmailAddress();
+    catch(NullPointerException e) {
+      Log.e(TAG, "getDatabaseInfo() NullPointerException e " + e.toString());
+      if (++count == maxTries) return "null";
     }
 
     if(sEmailAddressDb != null) {
+      Log.d(TAG, "getDatabaseInfo() sEmailAddressDb != null");
       return "update";
     }
     else {
+      Log.d(TAG, "getDatabaseInfo() sEmailAddressDb == null");
       return "create";
     }
 
@@ -205,7 +222,7 @@ public class Configure extends Activity implements AppCompatCallback {
     db = new DatabaseHandler(Configure.this); 
     //db = new DatabaseHandler(getApplicationContext()); 
     
-    if(getDatabaseInfo().equals("update")) {
+    if(!getDatabaseInfo().equals("null")) {
       editPhoneNumber.setText(sPhoneNumber);
       editEmailAddress.setText(sEmailAddress);
     }
