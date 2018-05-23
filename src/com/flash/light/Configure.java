@@ -187,6 +187,46 @@ public class Configure extends Activity implements AppCompatCallback {
 
   }
 
+  @NonNull
+  public String getPhoneNumber() throws NullPointerException {
+    try {
+      if(sPhoneNumberDb != null) {
+        return sPhoneNumberDb;
+      }
+    }
+    catch(NullPointerException e) {
+      if (++count == maxTries) return "null";
+    }
+    if(sPhoneNumberDb != null) {
+      return sPhoneNumberDb;
+    }
+    else {
+      return "null";
+    }
+  }
+
+  @NonNull
+  public String getEmailAddress() throws NullPointerException {
+    try {
+      if(sEmailAddressDb != null) {
+        Log.d(TAG, "getEmailAddress() return sEmailAddressDb " + sEmailAddressDb);
+        return sEmailAddressDb;
+      }
+    }
+    catch(NullPointerException e) {
+      Log.d(TAG, "getEmailAddress() NullPointerException e " + e.toString());
+      if (++count == maxTries) return "null";
+    }
+    if(sEmailAddressDb != null) {
+      Log.d(TAG, "getEmailAddress() return sEmailAddressDb " + sEmailAddressDb);
+      return sEmailAddressDb;
+    }
+    else {
+      Log.d(TAG, "getEmailAddress() return \"null\"");
+      return "null";
+    }
+  }
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
