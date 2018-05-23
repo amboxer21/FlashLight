@@ -100,8 +100,23 @@ public class Configure extends Activity implements AppCompatCallback {
 
   }
 
+  public boolean isNull(String string) throws NullPointerException {
+    try {
+      if(string == null || string.equals(null)) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    catch(NullPointerException e) {
+      return true;
+    }
+    return true;
+  }
+
   public static boolean isEqual(String string1, String string2) {
-    if(string1.equals(string2) && string2 != null) {
+    if(string1.equals(string2) || string1 == string2) {
       return true;
     }
     else {
@@ -110,7 +125,7 @@ public class Configure extends Activity implements AppCompatCallback {
   }
 
   public boolean isEmpty(String string) {
-    if(string == null || string == "" || string.length() == 0 || string.isEmpty()) {
+    if(!isNull(string) || string == "" || string.length() == 0 || string.isEmpty()) {
       return true;
     }
     else {
@@ -144,7 +159,7 @@ public class Configure extends Activity implements AppCompatCallback {
   public String getDatabaseInfo()  {
 
     if(db == null) {
-      return "null";
+      db = new DatabaseHandler(Configure.this);
     }
 
     List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
@@ -203,9 +218,8 @@ public class Configure extends Activity implements AppCompatCallback {
     editEmailAddress = (EditText)findViewById(R.id.edit_email_address);
 
     db = new DatabaseHandler(Configure.this); 
-    //db = new DatabaseHandler(getApplicationContext()); 
     
-    if(getDatabaseInfo().equals("update")) {
+    if(!getDatabaseInfo().equals("null")) {
       editPhoneNumber.setText(sPhoneNumber);
       editEmailAddress.setText(sEmailAddress);
     }
@@ -226,9 +240,6 @@ public class Configure extends Activity implements AppCompatCallback {
         float deltaX = x2 - x1;
 
         if(Math.abs(deltaX) > MIN_DISTANCE && x2 > x1) {
-          /*Intent intent = new Intent(Configure.this, FlashLight.class);
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-          startActivity(intent);*/
           finish();
         }
       break;
