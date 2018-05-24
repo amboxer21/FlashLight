@@ -18,10 +18,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.MenuInflater;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.view.ActionMode;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.app.AppCompatCallback;
 
@@ -33,16 +35,19 @@ public class Configure extends Activity implements AppCompatCallback {
   private static String sPhoneNumber;
   private static String sEmailAddress;
 
-  private static String sPhoneNumberDb;
-  private static String sEmailAddressDb;
+  public  static String sPhoneNumberDb;
+  public  static String sEmailAddressDb;
 
   private static DatabaseHandler db;
   private static AppCompatDelegate delegate;
   private static ComponentName componentName;
 
   private float x1, x2;
+  private static int count = 0;
+  private static int maxTries = 3;
   static final int MIN_DISTANCE = 150;
   private static String action  = "create";
+  private static final String TAG = "FlashLight Configure";
 
   public void toast(String text) {
     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
@@ -141,34 +146,58 @@ public class Configure extends Activity implements AppCompatCallback {
     super.onBackPressed();
   }
 
-  public String getDatabaseInfo()  {
+  @NonNull
+  public String getDatabaseInfo() throws NullPointerException {
 
-    if(db == null) {
-      return "null";
+    try {
+      if(db == null) {
+        db = new DatabaseHandler(Configure.this);
+        Log.d(TAG, "getDatabaseInfo() db == null");
+      }
+
+      List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
+
+      if(flashLightDatabase == null) {
+        Log.d(TAG, "getDatabaseInfo() flashLightDatabase == null");
+        return "null";
+      }
+
+      for(FlashLightDatabase fldb : flashLightDatabase) {
+        sPhoneNumberDb  = fldb.getPhoneNumber();
+        sEmailAddressDb = fldb.getEmailAddress();
+      }
+
     }
-
-    List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
-
-    if(flashLightDatabase == null) {
-      return null;
-    }
-
-    for(FlashLightDatabase fldb : flashLightDatabase) {
-      sPhoneNumberDb  = fldb.getPhoneNumber();
-      sEmailAddressDb = fldb.getEmailAddress();
+    catch(NullPointerException e) {
+      Log.e(TAG, "getDatabaseInfo() NullPointerException e " + e.toString());
+      Log.e(TAG, "getDatabaseInfo() return \"null\"");
+      if (++count == maxTries) return "null";
     }
 
     if(sEmailAddressDb != null) {
+      Log.d(TAG, "getDatabaseInfo() sEmailAddressDb != null");
+      Log.d(TAG, "getDatabaseInfo() return \"update\"");
       return "update";
     }
-    else {
+    else { 
+      Log.d(TAG, "getDatabaseInfo() sEmailAddressDb == null");
+      Log.d(TAG, "getDatabaseInfo() return \"create\"");
       return "create";
     }
 
   }
 
-  public String getPhoneNumber() {
-    if(!isEmpty(sPhoneNumberDb)) {
+  @NonNull
+  public String getPhoneNumber() throws NullPointerException {
+    try {
+      if(sPhoneNumberDb != null) {
+        return sPhoneNumberDb;
+      }
+    }
+    catch(NullPointerException e) {
+      if (++count == maxTries) return "null";
+    }
+    if(sPhoneNumberDb != null) {
       return sPhoneNumberDb;
     }
     else {
@@ -176,11 +205,24 @@ public class Configure extends Activity implements AppCompatCallback {
     }
   }
 
-  public String getEmailAddress() {
-    if(!isEmpty(sEmailAddressDb)) {
+  @NonNull
+  public String getEmailAddress() throws NullPointerException {
+    try {
+      if(sEmailAddressDb != null) {
+        Log.d(TAG, "getEmailAddress() return sEmailAddressDb " + sEmailAddressDb);
+        return sEmailAddressDb;
+      }
+    }
+    catch(NullPointerException e) {
+      Log.d(TAG, "getEmailAddress() NullPointerException e " + e.toString());
+      if (++count == maxTries) return "null";
+    }
+    if(sEmailAddressDb != null) {
+      Log.d(TAG, "getEmailAddress() return sEmailAddressDb " + sEmailAddressDb);
       return sEmailAddressDb;
     }
     else {
+      Log.d(TAG, "getEmailAddress() return \"null\"");
       return "null";
     }
   }
