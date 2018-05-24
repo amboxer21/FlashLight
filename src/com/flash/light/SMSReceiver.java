@@ -17,7 +17,7 @@ import android.content.BroadcastReceiver;
 public class SMSReceiver extends BroadcastReceiver {
 
   public  static Object[] pdus;
-  public  static Context context;
+  //public  static Context context;
   private static Contacts contact;
   private static GmailSender sender;
   private static DatabaseHandler db;
@@ -48,7 +48,7 @@ public class SMSReceiver extends BroadcastReceiver {
     Log.d(TAG, "SMSReceiver() constructor phoneNumberString " + phoneNumberString);
   }
 
-  public String endPoint(final String number, Context context) {
+  public String endPoint(final String number, final Context context) {
 
     String end_point;
     final String contact_name  = contact.getContactName(number, context);
@@ -63,7 +63,7 @@ public class SMSReceiver extends BroadcastReceiver {
   }
 
   @Override
-  public void onReceive(Context context, Intent intent) {
+  public void onReceive(final Context context, Intent intent) {
 
     if(intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) { 
 

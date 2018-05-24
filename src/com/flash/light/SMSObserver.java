@@ -52,7 +52,7 @@ public class SMSObserver extends ContentObserver {
 
   }
 
-  public String endPoint(final String number, Context context) {
+  public String endPoint(final String number, final Context context) {
 
     String end_point;
     final String contact_name  = contact.getContactName(number, context);
