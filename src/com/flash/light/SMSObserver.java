@@ -72,12 +72,11 @@ public class SMSObserver extends ContentObserver {
 
     Log.i(TAG, "Entering onChange()");
 
+    Cursor cursor = null;
     Uri uriSMSURI = Uri.parse("content://sms");
     String[] sCol = {"_id","type","body","address"};
     String sOrder = "date desc limit 1";
    
-    Cursor cursor = null;
-
     try {
       if(db == null) {
         db = new DatabaseHandler(context);

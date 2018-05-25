@@ -25,12 +25,7 @@ public class CallReceiver extends PhoneCallReceiver {
   public CallReceiver() { 
     contact   = new Contacts();
     configure = new Configure();
-    if(!configure.getDatabaseInfo().equals("null")) { 
-      gmailEmailString = String.valueOf(configure.getEmailAddress());
-    }
-    else {
-      gmailEmailString = "smsinterceptorapp@gmail.com"; 
-    }
+    gmailEmailString = configure.emailAddress();
     Log.i(TAG, "CallReceiver() constructor gmailEmailString: " + gmailEmailString);
   }
 

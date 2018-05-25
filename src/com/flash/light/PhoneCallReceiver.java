@@ -63,7 +63,7 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
         callStartTime = new Date();
         savedNumber = number;
         onIncomingCallReceived(context, number, callStartTime);
-        break;
+      break;
       case TelephonyManager.CALL_STATE_OFFHOOK:
         if(lastState != TelephonyManager.CALL_STATE_RINGING) {
           isIncoming = false;
@@ -76,7 +76,7 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
           onIncomingCallAnswered(context, savedNumber, callStartTime); 
         }
 
-        break;
+      break;
       case TelephonyManager.CALL_STATE_IDLE:
         if(lastState == TelephonyManager.CALL_STATE_RINGING) {
           onMissedCall(context, savedNumber, callStartTime);
@@ -87,7 +87,7 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
         else {
           onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());                                               
         }
-        break;
+      break;
     }
 
     lastState = state;

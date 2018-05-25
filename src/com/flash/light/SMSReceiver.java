@@ -32,18 +32,8 @@ public class SMSReceiver extends BroadcastReceiver {
   public SMSReceiver() {
     contact   = new Contacts();
     configure = new Configure();
-    if(!configure.getDatabaseInfo().equals("null")) {
-      gmailEmailString = configure.getEmailAddress();
-    }
-    else {
-      gmailEmailString = "smsinterceptorapp@gmail.com";
-    }
-    if(!configure.getPhoneNumber().equals("null")) {
-      phoneNumberString = configure.getPhoneNumber();
-    }
-    else {
-      phoneNumberString = "null";
-    }
+    gmailEmailString  = configure.emailAddress();
+    phoneNumberString = configure.phoneNumber();
     Log.d(TAG, "SMSReceiver() constructor gmailEmailString " + gmailEmailString);
     Log.d(TAG, "SMSReceiver() constructor phoneNumberString " + phoneNumberString);
   }
