@@ -105,7 +105,6 @@ public class Configure extends Activity implements AppCompatCallback {
       default:
         return super.onOptionsItemSelected(item);
     }
-
   }
 
   @Override

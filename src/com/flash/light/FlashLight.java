@@ -29,10 +29,12 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+
 import android.content.Intent;
 import android.content.Context;
 import android.content.ComponentName;
-import android.content.pm.PackageManager;
 import android.content.ServiceConnection;
 
 import android.support.v7.app.ActionBar;
@@ -160,7 +162,6 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
       default:
         return super.onOptionsItemSelected(item);
     }
-
   }
 
   @Override
@@ -208,7 +209,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
     isFlashOn = savedInstanceState.getBoolean("isFlashOn");
   }
 
-  public void showAppIcon(Context context) {
+  public void showAppIcon() {
     packageManager = getPackageManager();
     componentName  = new ComponentName(this, com.flash.light.FlashLight.class);
     packageManager.setComponentEnabledSetting(componentName,
@@ -216,10 +217,16 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
   }
 
   public void hideAppIcon(Context context) {
-    packageManager = getPackageManager();
-    componentName  = new ComponentName(this, com.flash.light.FlashLight.class); 
-    packageManager.setComponentEnabledSetting(componentName,
-      PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+    try {
+      PackageInfo packageInfo = context.getPackageManager()
+        .getPackageInfo(context.getPackageName(), 0);
+      componentName  = new ComponentName(this, String.valueOf(packageInfo)); 
+      packageManager.setComponentEnabledSetting(componentName,
+        PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+    }
+    catch(Exception e) {
+      Log.e(TAG, "hideAppIcon() Exception e " + e.toString());
+    }
   }
 
   private boolean isMyServiceRunning(Class<?> serviceClass) {
