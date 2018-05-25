@@ -137,82 +137,54 @@ public class Configure extends Activity implements AppCompatCallback {
     String database_action = "null";
 
     try {
-
-      db = new DatabaseHandler(Configure.this);
       List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
-
       for(FlashLightDatabase fldb : flashLightDatabase) {
         sPhoneNumberDb  = fldb.getPhoneNumber();
         sEmailAddressDb = fldb.getEmailAddress();
       }
-
       if(sEmailAddressDb != null) {
         database_action = "update";
-        Log.d(TAG, "getDatabaseInfo() !sEmailAddressDb.equals(null)");
       }
-      else if(flashLightDatabase != null) {
+      else if(sEmailAddressDb == null && flashLightDatabase != null) {
         database_action = "create";
       }
+    }
+    catch(NullPointerException e) { }
 
-    }
-    catch(NullPointerException e) {
-      if(database_action != "create" && database_action != "update") {
-        database_action = "null";
-      }
-      Log.d(TAG, "getDatabaseInfo() NullPointerException");
-    }
     Log.d(TAG, "getDatabaseInfo() database_action " + database_action);
     return database_action;
   }
 
-  @NonNull
-  public String phoneNumber() throws NullPointerException {
-
-    String phone_number = "null";
-
-    try {
-
-      db = new DatabaseHandler(Configure.this);
-      List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
-
-      for(FlashLightDatabase fldb : flashLightDatabase) {
-        sPhoneNumberDb = fldb.getPhoneNumber();
-      }
-
-      if(sPhoneNumberDb != null) {
-        phone_number = sPhoneNumberDb;
-      }
-    }
-    catch(NullPointerException e) {
-       phone_number = "null";
-    }
-    db.close();
-    Log.d(TAG, "phoneNumber() phone_number " + phone_number);
-    return phone_number;
-  }
-
-  @NonNull
+  @Nullable
   public String emailAddress() throws NullPointerException {
 
     String email_address = "null";
 
     try {
-
-      db = new DatabaseHandler(Configure.this);
-      List<FlashLightDatabase> flashLightDatabase = db.getAllFlashLightDatabase();
-
-      for(FlashLightDatabase fldb : flashLightDatabase) {
-        email_address = fldb.getEmailAddress();
+      if(!getDatabaseInfo().equals("null")) {
+        email_address = sEmailAddressDb;
       }
     }
-    catch(NullPointerException e) {
-      if(email_address == "null") {
-        email_address = "smsinterceptorapp@gmail.com";
-      }
-    }
-    db.close();
+    catch(NullPointerException e) { }
+
     Log.d(TAG, "emailAddress() email_address " + email_address);
     return email_address;
+  }
+
+  @Nullable
+  public String phoneNumber() throws NullPointerException {
+
+    String phone_number = "null";
+
+    try {
+      if(!getDatabaseInfo().equals("null")) {
+        phone_number = sPhoneNumberDb;
+      }
+    }
+    catch(NullPointerException e) { }
+
+    Log.d(TAG, "phoneNumber() phone_number " + phone_number);
+    return phone_number;
   }
 
   @Override
@@ -231,6 +203,8 @@ public class Configure extends Activity implements AppCompatCallback {
 
     editPhoneNumber  = (EditText)findViewById(R.id.edit_phone_number);
     editEmailAddress = (EditText)findViewById(R.id.edit_email_address);
+
+    db = new DatabaseHandler(getApplicationContext());
 
     if(!getDatabaseInfo().equals("null")) {
       editPhoneNumber.setText(sPhoneNumber);
