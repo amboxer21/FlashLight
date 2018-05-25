@@ -95,12 +95,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         flashLightDatabase.setEmailAddress(cursor.getString(2));
         flashLightDatabase.setPhoneNumber(cursor.getString(3));
         flashLightDatabaseList.add(flashLightDatabase);
-        if(flashLightDatabase.getEmailAddress() != null) {
-          Log.d("FlashLight","flashLightDatabase.getPhoneNumber() " + flashLightDatabase.getPhoneNumber());
-        }
-        if(flashLightDatabase.getPhoneNumber() != null) {
-          Log.d("FlashLight","flashLightDatabase.getEmailAddress() " + flashLightDatabase.getEmailAddress()); 
-        }
       } while (cursor.moveToNext());
     }
     if(cursor != null) {

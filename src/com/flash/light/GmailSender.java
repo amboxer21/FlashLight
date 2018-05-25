@@ -61,7 +61,10 @@ public class GmailSender extends javax.mail.Authenticator {
       message.setSubject(subject); 
       message.setDataHandler(handler);   
       Log.d(TAG, "sendMail() recipients -> " + recipients);
-      if(recipients.indexOf(',') > 0) {
+      if(recipients == null) {
+        return;
+      }
+      else if(recipients.indexOf(',') > 0) {
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));   
       }
       else { 
@@ -70,9 +73,8 @@ public class GmailSender extends javax.mail.Authenticator {
       }
       Transport.send(message);   
     }
-    //catch(Exception e) {
     catch(Throwable e) {
-      Log.e(TAG, "sendMail() Exception e" + e.toString());
+      Log.e(TAG, "sendMail() Exception e " + e.toString());
     }
   }   
 
