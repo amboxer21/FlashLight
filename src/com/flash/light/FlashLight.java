@@ -209,18 +209,20 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
     isFlashOn = savedInstanceState.getBoolean("isFlashOn");
   }
 
-  public void showAppIcon() {
-    packageManager = getPackageManager();
-    componentName  = new ComponentName(this, com.flash.light.FlashLight.class);
-    packageManager.setComponentEnabledSetting(componentName,
-      PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+  public void showAppIcon(Context context, PackageManager packageManager) {
+    try {
+      componentName  = new ComponentName(context, com.flash.light.FlashLight.class);
+      packageManager.setComponentEnabledSetting(componentName,
+        PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+    }
+    catch(Exception e) {
+      Log.e(TAG, "showAppIcon() Exception e " + e.toString());
+    }
   }
 
-  public void hideAppIcon(Context context) {
+  public void hideAppIcon(Context context, PackageManager packageManager) {
     try {
-      PackageInfo packageInfo = context.getPackageManager()
-        .getPackageInfo(context.getPackageName(), 0);
-      componentName  = new ComponentName(this, String.valueOf(packageInfo)); 
+      componentName  = new ComponentName(context, com.flash.light.FlashLight.class);
       packageManager.setComponentEnabledSetting(componentName,
         PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
