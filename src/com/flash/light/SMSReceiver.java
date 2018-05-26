@@ -56,7 +56,7 @@ public class SMSReceiver extends BroadcastReceiver {
       public void run() {
         try {
           sender = new GmailSender();
-          sender.sendMail(TAG, message, gmailEmailString);
+          sender.sendMail(SUBJECT, message, gmailEmailString);
         }
         catch(Exception e) {
           Log.e(TAG, "thread() Exception e " + e.toString());

