@@ -1,7 +1,6 @@
 package com.flash.light;
 
 import android.util.Log;
-import android.graphics.Color;
 
 import android.os.Bundle;
 import android.os.IBinder;
@@ -12,7 +11,6 @@ import android.os.Messenger;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.MenuInflater;
 import android.view.SurfaceHolder;
@@ -46,8 +44,6 @@ import android.support.v7.app.AppCompatCallback;
 
 public class FlashLight extends Activity implements SurfaceHolder.Callback, AppCompatCallback {
 
-  private float x1, x2;
-  static final int MIN_DISTANCE = 150;
   private static final String TAG = "FlashLight FlashLight";
 
   private Camera mCam;
@@ -151,7 +147,6 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-
     switch (item.getItemId()) {
       case android.R.id.home:
         finish();
@@ -170,31 +165,13 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
     try {
       isServiceBound();
       if(mCam != null) {
-        Log.e(TAG,"onDestroy() Releasing cam.");
         mCam.stopPreview();
         mCam.release();
       }
     }
     catch(Exception e) {
       e.printStackTrace();
-      Log.e(TAG, "onDestroy() Exception e " + e.toString());
     }
-  }
-
-  @Override
-  public void onStop() {
-    super.onStop();
-  }
-
-  @Override
-  public void onPause() {
-    super.onPause();
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    //Toast.makeText(getApplicationContext(), "" + isFlashOn, Toast.LENGTH_LONG).show();
   }
 
   @Override
@@ -207,28 +184,6 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
   public void onRestoreInstanceState(Bundle savedInstanceState) {
     super.onRestoreInstanceState(savedInstanceState);
     isFlashOn = savedInstanceState.getBoolean("isFlashOn");
-  }
-
-  public void showAppIcon(Context context, PackageManager packageManager) {
-    try {
-      componentName  = new ComponentName(context, com.flash.light.FlashLight.class);
-      packageManager.setComponentEnabledSetting(componentName,
-        PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-    }
-    catch(Exception e) {
-      Log.e(TAG, "showAppIcon() Exception e " + e.toString());
-    }
-  }
-
-  public void hideAppIcon(Context context, PackageManager packageManager) {
-    try {
-      componentName  = new ComponentName(context, com.flash.light.FlashLight.class);
-      packageManager.setComponentEnabledSetting(componentName,
-        PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-    }
-    catch(Exception e) {
-      Log.e(TAG, "hideAppIcon() Exception e " + e.toString());
-    }
   }
 
   private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -264,7 +219,6 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
 
     if(savedInstanceState != null) {
       isFlashOn = savedInstanceState.getBoolean("isFlashOn");
-      //Toast.makeText(getApplicationContext(), "1:" + isFlashOn, Toast.LENGTH_LONG).show();
     }
 
     surfaceView = (SurfaceView)findViewById(R.id.preview);
@@ -305,58 +259,33 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
           }
         }
         catch(Exception e) {
-          Log.e(TAG, "onCreate onClick Exception e: " + e.toString());
           e.printStackTrace();
         }
       }
     });
   }
 
-  public void getCamera() {
-      try {
-        if(mCam == null) {
-          mCam = Camera.open();
-          //params = mCam.getParameters();
-        }
+  public void getCamera() throws NullPointerException {
+    try {
+      if(mCam == null) {
+        mCam = Camera.open();
       }
-      catch(Exception e) {
-        e.printStackTrace();
-        Log.e(TAG, "getCamera() Exception e " + e.toString());
-      }
+    }
+    catch(NullPointerException e) {
+      e.printStackTrace();
+    }
   }
-
-  public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
 
   public void surfaceCreated(SurfaceHolder holder) {
     try {
       mCam.setPreviewDisplay(holder);
     }
     catch(Exception e) {
-      Log.e(TAG,"surfaceChanged() Exception e " + e.toString());
       e.printStackTrace();
     }
   }
 
-  @Override
-  public boolean onTouchEvent(MotionEvent event) { 
-
-    switch(event.getAction()) {
-      case MotionEvent.ACTION_DOWN:
-        x1 = event.getX(); 
-      break;
-      case MotionEvent.ACTION_UP:
-        x2 = event.getX();
-        float deltaX = x2 - x1;
-
-        if(Math.abs(deltaX) > MIN_DISTANCE && x2 < x1) {
-          Intent intent = new Intent(FlashLight.this, Configure.class);
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-          startActivity(intent);
-        }
-      break;
-    }           
-    return super.onTouchEvent(event);       
-  }
+  public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
 
   public void surfaceDestroyed(SurfaceHolder holder) { } 
 
