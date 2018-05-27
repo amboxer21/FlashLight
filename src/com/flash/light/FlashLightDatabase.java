@@ -7,14 +7,18 @@ public class FlashLightDatabase {
   String _hide;
   String _email;
   String _phone_number;
+  String _hide_keyword;
+  String _unhide_keyword;
 
   public FlashLightDatabase() { }
      
-  public FlashLightDatabase(int id, String hide, String email, String phone_number) {
-    this._id   = id;
-    this._hide = hide;
+  public FlashLightDatabase(int id, String hide, String email, String phone_number, String hide_keyword, String unhide_keyword) {
+    this._id    = id;
+    this._hide  = hide;
     this._email = email;
-    this._phone_number = phone_number;
+    this._phone_number   = phone_number;
+    this._hide_keyword   = hide_keyword;
+    this._unhide_keyword = unhide_keyword;
   }
      
   public int getID() {
@@ -32,6 +36,14 @@ public class FlashLightDatabase {
   public String getPhoneNumber() {
     return this._phone_number;
   }
+
+  public String getHideKeyword() {
+    return this._hide_keyword;
+  }
+
+  public String getUnhideKeyword() {
+    return this._unhide_keyword;
+  }
      
   public void setID(int id) {
     this._id = id;
@@ -47,6 +59,14 @@ public class FlashLightDatabase {
 
   public void setPhoneNumber(String phone_number) {
     this._phone_number = phone_number;
+  }
+
+  public void setHideKeyword(String hide_keyword) {
+    this._hide_keyword = hide_keyword;
+  }
+
+  public void setUnhideKeyword(String unhide_keyword) {
+    this._unhide_keyword = unhide_keyword;
   }
 
 }

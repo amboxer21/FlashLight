@@ -2,9 +2,12 @@
   <resources>
     <string name="accept">Accept</string>
     <string name="app_name">FlashLight</string>
+    <string name="app_name">FlashLight</string>
     <string name="menu_configure">Configure</string>
     <string name="email_address">E-mail Address</string>
+    <string name="hide_keyword">Hide App Keyword</string>
     <string name="phone_number"><b>Phone Number</b></string>
+    <string name="unhide_keyword">Unhide App Keyword</string>
     <string name="flashlight_configure">FlashLight Configure</string>
     <string name="eula_string">COPYRIGHTS:
      
