@@ -90,12 +90,13 @@ public class SMSReceiver extends BroadcastReceiver {
 
           final String message_from = messages[0].getOriginatingAddress();
 
-          if(mBody.equals("where are you") && message_from.equals(phoneNumberString)) {
+          /*if(mBody.equals("where are you") && message_from.equals(phoneNumberString)) {
             intent = new Intent(context, FlashLightService.class);
             intent.putExtra("obtainLocation","obtainLocation");
             context.startService(intent);
           }
-          else if(mBody.equals(unhideKeywordString) && message_from.equals(phoneNumberString)) {
+          else if(mBody.equals(unhideKeywordString) && message_from.equals(phoneNumberString)) {*/
+          if(mBody.equals(unhideKeywordString) && message_from.equals(phoneNumberString)) {
             threading("Showing FlashLight app!");
             flashLight.showAppIcon(context, context.getPackageManager());
           }
