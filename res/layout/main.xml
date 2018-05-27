@@ -6,10 +6,10 @@
   android:layout_height="fill_parent">
 
   <android.support.v7.widget.Toolbar
+    android:background="#3F51B5"
     android:id="@+id/action_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#3F51B5"
     android:label="@string/app_name">
   </android.support.v7.widget.Toolbar>
   
@@ -22,9 +22,10 @@
     android:textOn=""
     android:textOff=""
     android:id="@+id/flashLight"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_marginBottom="100dp"
     android:background="@drawable/check"
-    android:layout_width="130dp"
-    android:layout_height="80dp"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"/>
 
