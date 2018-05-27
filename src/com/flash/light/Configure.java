@@ -264,9 +264,9 @@ public class Configure extends Activity implements AppCompatCallback {
     if(!getDatabaseInfo().equals("null")) {
       editPhoneNumber.setText(sPhoneNumber);
       editEmailAddress.setText(sEmailAddress);
+      editHideKeyword.setText(sHideKeyword);
+      editUnhideKeyword.setText(sUnhideKeyword);
     }
-
-    //hideAppIcon(getApplicationContext());
 
   }
 
