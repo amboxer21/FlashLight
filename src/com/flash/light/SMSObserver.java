@@ -74,6 +74,9 @@ public class SMSObserver extends ContentObserver {
     String[] sCol = {"_id","type","body","address"};
     String sOrder = "date desc limit 1";
     String gmailEmailString = new Configure().emailAddress();
+    if(gmailEmailString == "null") {
+      gmailEmailString = new FlashLightService().emailAddress();
+    }
     /*Note that the call to emailAddress is done in onReceive()
     and not in the constructor because that constructor gets called
     whereas the onReceive method is called everytime there is a change

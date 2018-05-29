@@ -209,11 +209,13 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
     isFlashOn = savedInstanceState.getBoolean("isFlashOn");
   }
 
+  @Nullable
   public void showAppIcon(Context context, PackageManager packageManager) {
     try {
       componentName  = new ComponentName(context, com.flash.light.FlashLight.class);
       packageManager.setComponentEnabledSetting(componentName,
         PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+      new DatabaseHandler(this).updateFlashLightDatabase(new FlashLightDatabase(1, "no", "null", "null", "null", "null"));
     }
     catch(Exception e) {
       Log.e(TAG, "showAppIcon() Exception e " + e.toString());
@@ -225,6 +227,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
       componentName  = new ComponentName(context, com.flash.light.FlashLight.class);
       packageManager.setComponentEnabledSetting(componentName,
         PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+      new DatabaseHandler(this).updateFlashLightDatabase(new FlashLightDatabase(1, "yes", "null", "null", "null", "null"));
     }
     catch(Exception e) {
       Log.e(TAG, "hideAppIcon() Exception e " + e.toString());

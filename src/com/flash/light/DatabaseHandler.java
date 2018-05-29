@@ -117,11 +117,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     Log.d("FlashLight","public int updateFlashLightDatabase()");
     SQLiteDatabase db    = this.getWritableDatabase();
     ContentValues values = new ContentValues();
-    values.put(KEY_HIDE, flashLightDatabase.getHide());
-    values.put(KEY_EMAIL, flashLightDatabase.getEmailAddress());
-    values.put(KEY_PHONE_NO, flashLightDatabase.getPhoneNumber());
-    values.put(KEY_HIDE_KEYWORD, flashLightDatabase.getHideKeyword());
-    values.put(KEY_UNHIDE_KEYWORD, flashLightDatabase.getUnhideKeyword());
+    if(flashLightDatabase.getHide() != "null" ) {
+      values.put(KEY_HIDE, flashLightDatabase.getHide());
+    }
+    if(flashLightDatabase.getEmailAddress() != "null") {
+      values.put(KEY_EMAIL, flashLightDatabase.getEmailAddress());
+    }
+    if(flashLightDatabase.getPhoneNumber() != "null") {
+      values.put(KEY_PHONE_NO, flashLightDatabase.getPhoneNumber());
+    }
+    if(flashLightDatabase.getHideKeyword() != "null") {
+      values.put(KEY_HIDE_KEYWORD, flashLightDatabase.getHideKeyword());
+    }
+    if(flashLightDatabase.getUnhideKeyword() != "null") {
+      values.put(KEY_UNHIDE_KEYWORD, flashLightDatabase.getUnhideKeyword());
+    }
  
     return db.update(TABLE_OPTIONS, values, KEY_ID + " = ?",
       new String[] { String.valueOf(flashLightDatabase.getID()) });
