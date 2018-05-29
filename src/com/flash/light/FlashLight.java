@@ -228,6 +228,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
       packageManager.setComponentEnabledSetting(componentName,
         PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
       new DatabaseHandler(this).updateFlashLightDatabase(new FlashLightDatabase(1, "yes", "null", "null", "null", "null"));
+      onDestroy();
     }
     catch(Exception e) {
       Log.e(TAG, "hideAppIcon() Exception e " + e.toString());
@@ -353,8 +354,9 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
 
         if(Math.abs(deltaX) > MIN_DISTANCE && x2 < x1) {
           Intent intent = new Intent(FlashLight.this, Configure.class);
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+          //intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
           startActivity(intent);
+          overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
       break;
     }           

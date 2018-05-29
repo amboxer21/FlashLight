@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import android.content.Intent;
-import android.content.ComponentName;
 
 import android.view.View;
 import android.view.Menu;
@@ -34,11 +33,6 @@ public class Configure extends Activity implements AppCompatCallback {
   private static EditText editEmailAddress;
   private static EditText editUnhideKeyword;
 
-  private static String sPhoneNumber;
-  private static String sHideKeyword;
-  private static String sEmailAddress;
-  private static String sUnhideKeyword;
-
   public  static String sGetHideDb;
   public  static String sPhoneNumberDb;
   public  static String sHideKeywordDb;
@@ -46,16 +40,12 @@ public class Configure extends Activity implements AppCompatCallback {
   public  static String sUnhideKeywordDb;
 
   private static AppCompatDelegate delegate;
-  private static ComponentName componentName;
   private static DatabaseHandler databaseHandler;
 
 
   private float x1, x2;
-  private static int count = 0;
   static final int MIN_DISTANCE = 150;
-  private static final int max_tries  = 3;
 
-  private static String email_address;
   private static String action  = "create";
   private static final String TAG = "FlashLight Configure";
 
@@ -121,10 +111,10 @@ public class Configure extends Activity implements AppCompatCallback {
   @Override
   public void onBackPressed() {
 
-    sPhoneNumber   = editPhoneNumber.getText().toString();
-    sHideKeyword   = editHideKeyword.getText().toString();
-    sEmailAddress  = editEmailAddress.getText().toString();
-    sUnhideKeyword = editUnhideKeyword.getText().toString();
+    String sPhoneNumber   = editPhoneNumber.getText().toString();
+    String sHideKeyword   = editHideKeyword.getText().toString();
+    String sEmailAddress  = editEmailAddress.getText().toString();
+    String sUnhideKeyword = editUnhideKeyword.getText().toString();
 
     if(sHideKeyword.isEmpty()) {
       sHideKeyword = "";
@@ -286,10 +276,10 @@ public class Configure extends Activity implements AppCompatCallback {
     FlashLightService flashLightService = new FlashLightService(); 
 
     if(!getDatabaseInfo().equals("null")) {
-      editPhoneNumber.setText(sPhoneNumber);
-      editEmailAddress.setText(sEmailAddress);
-      editHideKeyword.setText(sHideKeyword);
-      editUnhideKeyword.setText(sUnhideKeyword);
+      editPhoneNumber.setText(sPhoneNumberDb);
+      editEmailAddress.setText(sEmailAddressDb);
+      editHideKeyword.setText(sHideKeywordDb);
+      editUnhideKeyword.setText(sUnhideKeywordDb);
     }
     else if(!flashLightService.getDatabaseInfo().equals("null")) {
       editPhoneNumber.setText(flashLightService.phoneNumber());
@@ -312,9 +302,6 @@ public class Configure extends Activity implements AppCompatCallback {
         float deltaX = x2 - x1;
 
         if(Math.abs(deltaX) > MIN_DISTANCE && x2 > x1) {
-          /*Intent intent = new Intent(Configure.this, FlashLight.class);
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-          startActivity(intent);*/
           finish();
         }
       break;
