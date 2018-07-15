@@ -2,7 +2,6 @@
   <resources>
     <string name="accept">Accept</string>
     <string name="app_name">FlashLight</string>
-    <string name="app_name">FlashLight</string>
     <string name="menu_configure">Configure</string>
     <string name="email_address">E-mail Address to Notify</string>
     <string name="hide_keyword">Hide App Keyword</string>

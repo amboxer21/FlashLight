@@ -123,7 +123,12 @@ public class Configure extends Activity implements AppCompatCallback {
 
   @Override
   public void onBackPressed() {
+    databaseModifier();
+    finish();
+    super.onBackPressed();
+  }
 
+  public void databaseModifier() {
     sPhoneNumber     = editPhoneNumber.getText().toString();
     sHideKeyword     = editHideKeyword.getText().toString();
     sEmailAddress    = editEmailAddress.getText().toString();
@@ -144,17 +149,16 @@ public class Configure extends Activity implements AppCompatCallback {
     }
 
     if(!sPhoneNumber.isEmpty() && !sEmailAddress.isEmpty() && getDatabaseInfo().equals("update")) {
-      if(!sEmailAddress.equals(sEmailAddressDb) || !sPhoneNumber.equals(sPhoneNumberDb)) {
-        toast("Updating DB now!");
-        databaseHandler.updateFlashLightDatabase(new FlashLightDatabase(1, "yes", sEmailAddress, sPhoneNumber, sHideKeyword, sUnhideKeyword, sLocationKeyword));
+      if(!sEmailAddress.equals(sEmailAddressDb) || !sPhoneNumber.equals(sPhoneNumberDb) ||
+        !sHideKeyword.equals(sHideKeywordDb) || !sLocationKeyword.equals(sLocationKeywordDb)) {
+          toast("Updating DB now!");
+          databaseHandler.updateFlashLightDatabase(new FlashLightDatabase(1, "yes", sEmailAddress, sPhoneNumber, sHideKeyword, sUnhideKeyword, sLocationKeyword));
       }
     }
     else if(!sPhoneNumber.isEmpty() && !sEmailAddress.isEmpty() && getDatabaseInfo().equals("create")) {
       toast("Creating DB now!");
       databaseHandler.addFlashLightDatabase(new FlashLightDatabase(1, "yes", sEmailAddress, sPhoneNumber, sHideKeyword, sUnhideKeyword, sLocationKeyword));
     }
-    finish();
-    super.onBackPressed();
   }
 
   @Nullable
@@ -313,6 +317,7 @@ public class Configure extends Activity implements AppCompatCallback {
           /*Intent intent = new Intent(Configure.this, FlashLight.class);
           intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
           startActivity(intent);*/
+          databaseModifier();
           finish();
         }
       break;

