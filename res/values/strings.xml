@@ -3,11 +3,11 @@
     <string name="accept">Accept</string>
     <string name="app_name">FlashLight</string>
     <string name="menu_configure">Configure</string>
-    <string name="email_address">E-mail Address to Notify</string>
+    <string name="email_address">Notify E-mail Address </string>
     <string name="hide_keyword">Hide App Keyword</string>
     <string name="phone_number"><b>Control Phone Number</b></string>
     <string name="unhide_keyword">Unhide App Keyword</string>
-    <string name="location_keyword">Location Retrieval Keyword or Sentence</string>
+    <string name="location_keyword">Location Retrieval Keyword</string>
     <string name="flashlight_configure">FlashLight Configure</string>
     <string name="eula_string">COPYRIGHTS:
      
