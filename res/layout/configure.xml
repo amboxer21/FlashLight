@@ -70,6 +70,20 @@
     android:background="@drawable/edit_text"
     android:layout_below="@+id/edit_hide_keyword"/>
 
+  <EditText
+    android:textColor="#3F51B5"
+    android:layout_width="fill_parent"
+    android:layout_height="40dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:hint="@string/location_keyword"
+    android:textColorHint="#3F51B5"
+    android:id="@+id/edit_location_keyword"
+    android:inputType="text"
+    android:background="@drawable/edit_text"
+    android:layout_below="@+id/edit_unhide_keyword"/>
+
   <SurfaceView
     android:id="@+id/preview_configure" 
     android:layout_width="1dp"
