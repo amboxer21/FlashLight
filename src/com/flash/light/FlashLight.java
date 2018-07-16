@@ -121,8 +121,7 @@ public class FlashLight extends Activity implements SurfaceHolder.Callback, AppC
     if (delegate == null) {
       delegate = AppCompatDelegate.create(this, this);
     }
-
-  return delegate;
+    return delegate;
   }
 
   public boolean supportRequestWindowFeature(int featureId) {

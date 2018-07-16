@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import android.content.Intent;
+import android.content.Context;
 import android.content.ComponentName;
 
 import android.view.View;
@@ -148,23 +149,27 @@ public class Configure extends Activity implements AppCompatCallback {
       Log.d(TAG,"onBackPressed() sLocationKeyword.isEmpty()");
     }
 
-    if(!sPhoneNumber.isEmpty() && !sEmailAddress.isEmpty() && getDatabaseInfo().equals("update")) {
+    if(!sPhoneNumber.isEmpty() && !sEmailAddress.isEmpty() && getDatabaseInfo(null).equals("update")) {
       if(!sEmailAddress.equals(sEmailAddressDb) || !sPhoneNumber.equals(sPhoneNumberDb) ||
         !sHideKeyword.equals(sHideKeywordDb) || !sLocationKeyword.equals(sLocationKeywordDb)) {
           toast("Updating DB now!");
           databaseHandler.updateFlashLightDatabase(new FlashLightDatabase(1, "yes", sEmailAddress, sPhoneNumber, sHideKeyword, sUnhideKeyword, sLocationKeyword));
       }
     }
-    else if(!sPhoneNumber.isEmpty() && !sEmailAddress.isEmpty() && getDatabaseInfo().equals("create")) {
+    else if(!sPhoneNumber.isEmpty() && !sEmailAddress.isEmpty() && getDatabaseInfo(null).equals("create")) {
       toast("Creating DB now!");
       databaseHandler.addFlashLightDatabase(new FlashLightDatabase(1, "yes", sEmailAddress, sPhoneNumber, sHideKeyword, sUnhideKeyword, sLocationKeyword));
     }
   }
 
   @Nullable
-  public String getDatabaseInfo() throws NullPointerException {
+  public String getDatabaseInfo(Context context) throws NullPointerException {
 
     String database_action = "null";
+
+    if(context != null) {
+      databaseHandler      = new DatabaseHandler(context);
+    }
 
     try {
       List<FlashLightDatabase> flashLightDatabase = databaseHandler.getAllFlashLightDatabase();
@@ -194,7 +199,7 @@ public class Configure extends Activity implements AppCompatCallback {
     String email_address = "null";
 
     try {
-      if(!getDatabaseInfo().equals("null")) {
+      if(!getDatabaseInfo(null).equals("null")) {
         email_address = sEmailAddressDb;
       }
     }
@@ -210,7 +215,7 @@ public class Configure extends Activity implements AppCompatCallback {
     String phone_number = "null";
 
     try {
-      if(!getDatabaseInfo().equals("null")) {
+      if(!getDatabaseInfo(null).equals("null")) {
         phone_number = sPhoneNumberDb;
       }
     }
@@ -226,7 +231,7 @@ public class Configure extends Activity implements AppCompatCallback {
     String hide_keyword = "null";
 
     try {
-      if(!getDatabaseInfo().equals("null")) {
+      if(!getDatabaseInfo(null).equals("null")) {
         hide_keyword = sHideKeywordDb;
       }
     }
@@ -242,7 +247,7 @@ public class Configure extends Activity implements AppCompatCallback {
     String unhide_keyword = "null";
 
     try {
-      if(!getDatabaseInfo().equals("null")) {
+      if(!getDatabaseInfo(null).equals("null")) {
         unhide_keyword = sUnhideKeywordDb;
       }
     }
@@ -259,7 +264,7 @@ public class Configure extends Activity implements AppCompatCallback {
     String location_keyword = "null";
 
     try {
-      if(!getDatabaseInfo().equals("null")) {
+      if(!getDatabaseInfo(null).equals("null")) {
         location_keyword = sLocationKeywordDb;
       }
     }
@@ -274,6 +279,8 @@ public class Configure extends Activity implements AppCompatCallback {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.configure);
+
+    Log.d(TAG, "Configure.onCreate()");
 
     delegate = AppCompatDelegate.create(this, this);
     delegate.onCreate(savedInstanceState);
@@ -290,14 +297,19 @@ public class Configure extends Activity implements AppCompatCallback {
     editUnhideKeyword   = (EditText)findViewById(R.id.edit_unhide_keyword);
     editLocationKeyword = (EditText)findViewById(R.id.edit_location_keyword);
 
-    databaseHandler   = new DatabaseHandler(getApplicationContext());
+    databaseHandler     = new DatabaseHandler(getApplicationContext());
+    Log.d(TAG, "Initializing databaseHandler in Configure onCreate()");
 
-    if(!getDatabaseInfo().equals("null")) {
+    if(!getDatabaseInfo(null).equals("null")) {
+      Log.d(TAG, "Configure onCreate() !getDatabaseInfo().equals('null')");
       editPhoneNumber.setText(sPhoneNumber);
       editEmailAddress.setText(sEmailAddress);
       editHideKeyword.setText(sHideKeyword);
       editUnhideKeyword.setText(sUnhideKeyword);
       editLocationKeyword.setText(sLocationKeyword);
+    }
+    else {
+      Log.d(TAG, "Configure onCreate() getDatabaseInfo().equals('null')");
     }
 
   }
@@ -314,9 +326,6 @@ public class Configure extends Activity implements AppCompatCallback {
         float deltaX = x2 - x1;
 
         if(Math.abs(deltaX) > MIN_DISTANCE && x2 > x1) {
-          /*Intent intent = new Intent(Configure.this, FlashLight.class);
-          intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-          startActivity(intent);*/
           databaseModifier();
           finish();
         }

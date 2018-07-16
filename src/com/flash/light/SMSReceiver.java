@@ -35,6 +35,7 @@ public class SMSReceiver extends BroadcastReceiver {
   private static final String TAG     = "FlashLight SMSReceiver";
 
   public SMSReceiver() {
+    Log.d(TAG,"SMSReceiver() constructor");
     configure  = new Configure();
     flashLight = new FlashLight();
     phoneNumberString     = configure.phoneNumber();
