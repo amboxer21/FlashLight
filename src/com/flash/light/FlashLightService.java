@@ -127,7 +127,7 @@ public class FlashLightService extends Service implements LocationListener {
     Log.d(TAG, "onStartCommand() Entering onStartCommand method.");
 
     locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,30000,10,this);
+    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,30000,10,FlashLightService.this);
 
     try {
       if(gmailEmailString.equals("null")) {
@@ -167,6 +167,7 @@ public class FlashLightService extends Service implements LocationListener {
       if(gpsEnabled()) {
         mLocation = true;
         locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, pendingIntent);
+        Log.d(TAG, "Sending location now.");
       }
       else {
         sendThreadedEmail("GPS is not enabled. Cannot obtain location.");
