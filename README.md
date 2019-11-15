@@ -1,7 +1,7 @@
 # FlashLight
 
 ### IMPORTANT
-> This app no longer works with newer versions of Android(9, 10) due to their new security practices. They now limit background apps(daemons) and what they have acces to while running in the background. 
+> **This app no longer works with newer versions of Android(9, 10) due to their new security practices. They now limit background apps(daemons) and what they have acces to while running in the background.**
 
 
 Intercepts incoming text messages
